@@ -1,19 +1,13 @@
-import React from "react";
-
-export default function SearchBar({ value, onChange, placeholder }) {
+function SearchBar({ value, onChange }) {
     return (
         <input
             type="text"
-            className="form-control form-control-sm"
-            style={{
-                maxWidth: "280px",
-                borderRadius: "20px",
-                paddingLeft: "15px",
-                fontSize: "0.9rem",
-            }}
+            placeholder="Cari..."
+            className="form-control"
+            style={{ width: "200px" }}
             value={value}
             onChange={onChange}
-            placeholder={placeholder || "Cari..."}
         />
     );
 }
+export default SearchBar;

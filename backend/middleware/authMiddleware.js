@@ -1,16 +1,26 @@
 const jwt = require("jsonwebtoken");
 
-const authMiddleware = (req, res, next) => {
+const auth = (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Token tidak ditemukan" });
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        req.user = decoded; // ⬅️ user info (id, role, etc)
         next();
     } catch (err) {
-        res.status(403).json({ message: "Token tidak valid" });
+        return res.status(403).json({ message: "Token tidak valid" });
     }
 };
 
-module.exports = authMiddleware;
+// ✅ Middleware tambahan untuk cek role
+const authorizeRoles = (...allowedRoles) => {
+    return (req, res, next) => {
+        if (!req.user || !allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ message: "Akses ditolak. Perlu role: " + allowedRoles.join(", ") });
+        }
+        next();
+    };
+};
+
+module.exports = { auth, authorizeRoles };

@@ -38,7 +38,7 @@ const Dashboard = () => {
 
     return (
         <div className="p-4">
-            <h1 className="mb-4 fw-bold">📊 Dashboard Hotel</h1>
+            <h2 className="mb-4 fw-bold">Dashboard</h2>
             <SummaryCardsGroup stats={stats} />
             <Row className="g-3 mt-2">
                 <Col xs={12} md={6}>

@@ -23,7 +23,7 @@ function TopNavbar() {
             <Container fluid>
                 <Navbar.Brand className="fw-bold d-flex align-items-center gap-2">
                     <FaHotel />
-                    HotelApp
+                    Hotel
                 </Navbar.Brand>
                 <Nav className="ms-auto">
                     <NavDropdown

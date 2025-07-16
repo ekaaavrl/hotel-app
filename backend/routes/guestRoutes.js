@@ -6,7 +6,7 @@ const {
     updateGuest,
     deleteGuest,
 } = require("../controllers/guestController");
-const auth = require("../middleware/authMiddleware");
+const { auth } = require("../middleware/authMiddleware");
 
 router.get("/", auth, getGuests);
 router.post("/", auth, createGuest);

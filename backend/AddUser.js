@@ -3,11 +3,11 @@ const db = require('./config/db'); // pastikan path benar
 
 async function insertUser() {
     try {
-        const username = 'resep01';
-        const passwordPlain = 'resep1';
-        const full_name = 'Resepsionis A';
-        const email = 'resep@hotel.com';
-        const role = 'receptionist'; // Sesuai ENUM: admin, receptionist, manager, staff
+        const username = 'staff01';
+        const passwordPlain = 'staff1';
+        const full_name = 'Staff 1';
+        const email = 'staff@hotel.com';
+        const role = 'staff'; // Sesuai ENUM: admin, receptionist, manager, staff
 
         const hashedPassword = await bcrypt.hash(passwordPlain, 10);
 

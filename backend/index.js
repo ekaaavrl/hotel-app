@@ -38,6 +38,12 @@ app.use("/api/logs", userLogRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
+
+// Fallback route untuk root path
+app.get("/", (req, res) => {
+    res.send("🎉 API Hotel Management berjalan!");
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

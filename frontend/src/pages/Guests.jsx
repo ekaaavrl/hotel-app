@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Tabs, Tab, Form, Button, Table, Card, Row, Col, Alert } from "react-bootstrap";
 import api from "../services/api";
 
-const Guests = () => {
+const Guest = () => {
+    const [activeTab, setActiveTab] = useState("form");
     const [guests, setGuests] = useState([]);
+    const [editId, setEditId] = useState(null);
     const [form, setForm] = useState({
         full_name: "",
         email: "",
@@ -11,7 +14,7 @@ const Guests = () => {
         id_number: "",
         nationality: "",
     });
-    const [editId, setEditId] = useState(null);
+    const [error, setError] = useState("");
 
     const fetchGuests = async () => {
         try {
@@ -40,14 +43,18 @@ const Guests = () => {
             });
             setEditId(null);
             fetchGuests();
+            setActiveTab("list");
+            setError("");
         } catch (err) {
             console.error("Gagal simpan tamu:", err);
+            setError("Gagal menyimpan data tamu.");
         }
     };
 
     const handleEdit = (guest) => {
         setForm(guest);
         setEditId(guest.guest_id);
+        setActiveTab("form");
     };
 
     const handleDelete = async (id) => {
@@ -62,93 +69,129 @@ const Guests = () => {
     }, []);
 
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Data Tamu</h2>
+        <div className="p-4">
+            <h4>Manajemen Data Tamu</h4>
+            <Card>
+                <Card.Body>
+                    <Tabs
+                        activeKey={activeTab}
+                        onSelect={(k) => setActiveTab(k)}
+                        className="mb-3"
+                    >
+                        <Tab eventKey="form" title="Form Tamu">
+                            {error && <Alert variant="danger">{error}</Alert>}
+                            <Form onSubmit={handleSubmit}>
+                                <Row className="mb-3">
+                                    <Col md={6}>
+                                        <Form.Label>Nama Lengkap</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={form.full_name}
+                                            onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                                            required
+                                        />
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control
+                                            type="email"
+                                            value={form.email}
+                                            onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                            required
+                                        />
+                                    </Col>
+                                </Row>
 
-            {/* Form Tambah/Edit */}
-            <form onSubmit={handleSubmit} className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                    type="text"
-                    placeholder="Nama Lengkap"
-                    value={form.full_name}
-                    onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-                    required
-                    className="border p-2 rounded"
-                />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    required
-                    className="border p-2 rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="No HP"
-                    value={form.phone_number}
-                    onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
-                    required
-                    className="border p-2 rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="Alamat"
-                    value={form.address}
-                    onChange={(e) => setForm({ ...form, address: e.target.value })}
-                    className="border p-2 rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="No KTP / Paspor"
-                    value={form.id_number}
-                    onChange={(e) => setForm({ ...form, id_number: e.target.value })}
-                    className="border p-2 rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="Kebangsaan"
-                    value={form.nationality}
-                    onChange={(e) => setForm({ ...form, nationality: e.target.value })}
-                    className="border p-2 rounded"
-                />
+                                <Row className="mb-3">
+                                    <Col md={6}>
+                                        <Form.Label>No HP</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={form.phone_number}
+                                            onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
+                                            required
+                                        />
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Label>Alamat</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={form.address}
+                                            onChange={(e) => setForm({ ...form, address: e.target.value })}
+                                        />
+                                    </Col>
+                                </Row>
 
-                <button
-                    type="submit"
-                    className="col-span-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-                >
-                    {editId ? "Update" : "Tambah"} Tamu
-                </button>
-            </form>
+                                <Row className="mb-3">
+                                    <Col md={6}>
+                                        <Form.Label>No KTP / Paspor</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={form.id_number}
+                                            onChange={(e) => setForm({ ...form, id_number: e.target.value })}
+                                        />
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Label>Kebangsaan</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={form.nationality}
+                                            onChange={(e) => setForm({ ...form, nationality: e.target.value })}
+                                        />
+                                    </Col>
+                                </Row>
 
-            {/* Tabel Tamu */}
-            <table className="w-full table-auto border">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border p-2">Nama</th>
-                        <th className="border p-2">Email</th>
-                        <th className="border p-2">HP</th>
-                        <th className="border p-2">Negara</th>
-                        <th className="border p-2">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {guests.map((guest) => (
-                        <tr key={guest.guest_id}>
-                            <td className="border p-2">{guest.full_name}</td>
-                            <td className="border p-2">{guest.email}</td>
-                            <td className="border p-2">{guest.phone_number}</td>
-                            <td className="border p-2">{guest.nationality}</td>
-                            <td className="border p-2 text-center">
-                                <button onClick={() => handleEdit(guest)} className="text-blue-600 mr-2">Edit</button>
-                                <button onClick={() => handleDelete(guest.guest_id)} className="text-red-600">Hapus</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                                <Button type="submit" variant="primary">
+                                    {editId ? "Update" : "Tambah"} Tamu
+                                </Button>
+                            </Form>
+                        </Tab>
+
+                        <Tab eventKey="list" title="Daftar Tamu">
+                            <Table striped bordered hover responsive>
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>HP</th>
+                                        <th>Negara</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {guests.map((guest) => (
+                                        <tr key={guest.guest_id}>
+                                            <td>{guest.full_name}</td>
+                                            <td>{guest.email}</td>
+                                            <td>{guest.phone_number}</td>
+                                            <td>{guest.nationality}</td>
+                                            <td>
+                                                <Button
+                                                    variant="outline-primary"
+                                                    size="sm"
+                                                    className="me-2"
+                                                    onClick={() => handleEdit(guest)}
+                                                >
+                                                    Edit
+                                                </Button>
+                                                <Button
+                                                    variant="outline-danger"
+                                                    size="sm"
+                                                    onClick={() => handleDelete(guest.guest_id)}
+                                                >
+                                                    Hapus
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </Tab>
+                    </Tabs>
+                </Card.Body>
+            </Card>
         </div>
     );
 };
 
-export default Guests;
+export default Guest;
