@@ -38,3 +38,14 @@ exports.remove = async (req, res) => {
         res.status(500).json({ message: "Gagal hapus user" });
     }
 };
+
+exports.getMe = async (req, res) => {
+    try {
+        const userId = req.user.user_id; // dapat dari middleware auth
+        const user = await User.getUserById(userId);
+        if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: "Gagal ambil data profile", error: err.message });
+    }
+};
