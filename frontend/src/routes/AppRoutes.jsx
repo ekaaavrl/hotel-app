@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
+import Profile from "../pages/Profile";
 import Guests from "../pages/Guests";
 import Layout from "../components/Layout";
 import RoomTypes from "../pages/RoomsType";
@@ -25,6 +26,14 @@ const AppRoutes = () => (
             element={
                 <Layout>
                     <Dashboard />
+                </Layout>
+            }
+        />
+        <Route
+            path="/profile"
+            element={
+                <Layout>
+                    <Profile />
                 </Layout>
             }
         />

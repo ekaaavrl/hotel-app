@@ -25,9 +25,16 @@ const deleteUser = async (id) => {
     await db.query("DELETE FROM users WHERE user_id = ?", [id]);
 };
 
+const getUserById = async (id) => {
+    const [rows] = await db.query("SELECT user_id, username, full_name, email, role, status FROM users WHERE user_id = ?", [id]);
+    return rows[0];
+};
+
+
 module.exports = {
     getAllUsers,
     createUser,
     updateUser,
     deleteUser,
+    getUserById,
 };
