@@ -63,7 +63,6 @@ const ReportRooms = () => {
                     </Col>
                 </Row>
             )}
-
             {/* Filter */}
             <Form.Group className="mb-3" style={{ maxWidth: "300px" }}>
                 <Form.Label>Filter Status</Form.Label>
