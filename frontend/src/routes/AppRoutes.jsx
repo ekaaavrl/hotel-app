@@ -16,107 +16,162 @@ import ReportReservations from "../pages/reports/ReportReservations";
 import ReportIncome from "../pages/reports/ReportIncome";
 import ReportRooms from "../pages/reports/ReportRooms";
 import UserLogs from "../pages/UserLogs";
+import PrivateRoute from "../components/PrivateRoute";
 
 const AppRoutes = () => (
     <Routes>
         <Route path="/" element={<Login />} />
+
         <Route
             path="/dashboard"
             element={
-                <Layout>
-                    <Dashboard />
-                </Layout>
+                <PrivateRoute>
+                    <Layout>
+                        <Dashboard />
+                    </Layout>
+                </PrivateRoute>
             }
         />
         <Route
             path="/guests"
             element={
-                <Layout>
-                    <Guests />
-                </Layout>
+                <PrivateRoute>
+                    <Layout>
+                        <Guests />
+                    </Layout>
+                </PrivateRoute>
             }
         />
         <Route
             path="/room-types"
             element={
-                <Layout>
-                    <RoomTypes />
-                </Layout>}
+                <PrivateRoute>
+                    <Layout>
+                        <RoomTypes />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/rooms"
             element={
-                <Layout>
-                    <Rooms />
-                </Layout>}
+                <PrivateRoute>
+                    <Layout>
+                        <Rooms />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/reservation-form"
-            element={<Layout>
-                <ReservationForm />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <ReservationForm />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/reservations"
-            element={<Layout>
-                <Reservations />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <Reservations />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/payments"
-            element={<Layout>
-                <Payments />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <Payments />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/staff"
-            element={<Layout>
-                <Staff />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <Staff />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/users"
-            element={<Layout>
-                <Users />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <Users />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/services"
-            element={<Layout>
-                <RoomServices />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <RoomServices />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/reports/history"
-            element={<Layout>
-                <ReportHistory />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <ReportHistory />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/reports/reservations"
-            element={<Layout>
-                <ReportReservations />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <ReportReservations />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/reports/income"
-            element={<Layout>
-                <ReportIncome />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <ReportIncome />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/reports/rooms"
-            element={<Layout>
-                <ReportRooms />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <ReportRooms />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
         <Route
             path="/logs"
-            element={<Layout>
-                <UserLogs />
-            </Layout>}
+            element={
+                <PrivateRoute>
+                    <Layout>
+                        <UserLogs />
+                    </Layout>
+                </PrivateRoute>
+            }
         />
-
     </Routes>
 );
 

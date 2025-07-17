@@ -32,7 +32,7 @@ const ReportRooms = () => {
 
     return (
         <div className="p-4">
-            <h3 className="fw-bold mb-4">🛏️ Laporan Status Kamar</h3>
+            <h3 className="fw-bold mb-4">Laporan Status Kamar</h3>
 
             {/* Summary cards */}
             {statusFilter === "all" && (
@@ -68,10 +68,10 @@ const ReportRooms = () => {
             <Form.Group className="mb-3" style={{ maxWidth: "300px" }}>
                 <Form.Label>Filter Status</Form.Label>
                 <Form.Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                    <option value="all">📋 Semua</option>
-                    <option value="available">✔️ Tersedia</option>
-                    <option value="occupied">❌ Ditempati</option>
-                    <option value="maintenance">🔧 Maintenance</option>
+                    <option value="all">Semua</option>
+                    <option value="available">Tersedia</option>
+                    <option value="occupied">Ditempati</option>
+                    <option value="maintenance">Maintenance</option>
                 </Form.Select>
             </Form.Group>
 

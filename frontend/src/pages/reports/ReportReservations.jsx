@@ -24,7 +24,7 @@ const ReportReservations = () => {
 
     return (
         <div className="p-4">
-            <h3 className="fw-bold mb-3">📅 Laporan Reservasi Harian</h3>
+            <h3 className="fw-bold mb-3">Laporan Reservasi Harian</h3>
 
             <Form.Group className="mb-3">
                 <Form.Label>Pilih Tanggal:</Form.Label>

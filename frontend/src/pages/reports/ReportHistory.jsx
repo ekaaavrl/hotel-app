@@ -20,7 +20,7 @@ const ReportHistory = () => {
 
     return (
         <div className="p-4">
-            <h3 className="fw-bold mb-3">📜 History Transaksi Pembayaran</h3>
+            <h3 className="fw-bold mb-3">History Transaksi Pembayaran</h3>
 
             <Table striped bordered hover responsive>
                 <thead>
