@@ -52,3 +52,19 @@ exports.createReservation = async (req, res) => {
         res.status(500).json({ message: "Gagal menyimpan reservasi.", error: err.message });
     }
 };
+exports.getReservations = async (req, res) => {
+    try {
+        const [results] = await db.query(`
+            SELECT r.*, g.full_name AS guest_name, rm.room_number
+            FROM reservations r
+            JOIN guests g ON r.guest_id = g.guest_id
+            JOIN rooms rm ON r.room_id = rm.room_id
+            ORDER BY r.created_at DESC
+        `);
+        res.json(results);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Gagal mengambil data reservasi." });
+    }
+};
+

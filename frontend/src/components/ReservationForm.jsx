@@ -21,14 +21,27 @@ const ReservationForm = () => {
     const [activeTab, setActiveTab] = useState("form");
 
     const fetchData = async () => {
-        const [guestRes, roomRes, reservationRes] = await Promise.all([
-            api.get("/guests"),
-            api.get("/rooms"),
-            api.get("/reservations"),
-        ]);
-        setGuests(guestRes.data);
-        setRooms(roomRes.data);
-        setReservations(reservationRes.data);
+        try {
+            const token = localStorage.getItem("token");
+            const headers = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const [guestRes, roomRes, reservationRes] = await Promise.all([
+                api.get("/guests", headers),
+                api.get("/rooms", headers),
+                api.get("/reservations", headers),
+            ]);
+
+            setGuests(guestRes.data);
+            setRooms(roomRes.data);
+            setReservations(reservationRes.data);
+        } catch (err) {
+            console.error("Gagal fetch data:", err);
+            setError("Gagal mengambil data. Pastikan Anda sudah login.");
+        }
     };
 
     useEffect(() => {
