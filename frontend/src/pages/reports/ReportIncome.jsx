@@ -28,7 +28,7 @@ const ReportIncome = () => {
 
     return (
         <div className="p-4">
-            <h3 className="fw-bold mb-3">💰 Laporan Pendapatan</h3>
+            <h3 className="fw-bold mb-3">Laporan Pendapatan</h3>
 
             <Row className="mb-3 g-2 align-items-end">
                 <Col md={3}>
