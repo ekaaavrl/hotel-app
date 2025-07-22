@@ -1,6 +1,6 @@
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Container, Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt, FaHotel } from "react-icons/fa";
+import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 
 function TopNavbar() {
     const navigate = useNavigate();
@@ -16,30 +16,39 @@ function TopNavbar() {
             bg="dark"
             variant="dark"
             expand="lg"
-            fixed="top"
-            className="shadow-sm px-4"
-            style={{ zIndex: 1040 }}
+            className="shadow-sm py-2 px-4"
+            style={{ position: "fixed", width: "100%", top: 0, zIndex: 1000 }}
         >
-            <Container fluid>
-                <Navbar.Brand className="fw-bold d-flex align-items-center gap-2">
-                    <FaHotel />
-                    Hotel
+            <Container fluid className="d-flex justify-content-between align-items-center">
+                {/* Logo dan Judul */}
+                <Navbar.Brand className="fw-bold text-white d-flex align-items-center gap-2">
+                    {/* Bisa tambahkan logo di sini */}
+                    <span style={{ fontSize: "1.25rem" }}>Hotel Management</span>
                 </Navbar.Brand>
-                <Nav className="ms-auto">
-                    <NavDropdown
-                        title={<FaUserCircle size={22} />}
-                        id="profile-dropdown"
-                        align="end"
+
+                {/* Profil Dropdown */}
+                <Dropdown align="end">
+                    <Dropdown.Toggle
+                        variant="dark"
+                        className="border-0 d-flex align-items-center gap-2 text-white"
+                        id="dropdown-user"
                     >
-                        <NavDropdown.Item onClick={() => navigate("/profile")}>
+                        <FaUserCircle size={22} />
+                        <span className="d-none d-md-inline">
+                            {user?.role || "User"}
+                        </span>
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu variant="dark">
+                        <Dropdown.Item onClick={() => navigate("/profile")}>
                             <FaUserCircle className="me-2" /> Profil
-                        </NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item onClick={handleLogout} className="text-danger">
+                        </Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item onClick={handleLogout} className="text-danger">
                             <FaSignOutAlt className="me-2" /> Logout
-                        </NavDropdown.Item>
-                    </NavDropdown>
-                </Nav>
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </Container>
         </Navbar>
     );

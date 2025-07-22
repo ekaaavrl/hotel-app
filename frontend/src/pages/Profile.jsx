@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import profile_photo from "../assets/s_wun.jpg";
+import profile_photo from "../assets/user.jpg";
 
 const Profile = () => {
   const [user, setUser] = useState(null);

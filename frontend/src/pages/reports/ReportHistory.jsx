@@ -45,7 +45,7 @@ const ReportHistory = () => {
         <div className="p-4">
             <Card className="shadow-sm">
                 <Card.Header className="bg-white d-flex justify-content-between align-items-center">
-                    <h5 className="fw-bold text-primary m-0">Laporan Pembayaran</h5>
+                    <h5 className="fw-bold text-dark m-0">Laporan Pembayaran</h5>
                 </Card.Header>
                 <Card.Body>
                     <Row className="mb-3">

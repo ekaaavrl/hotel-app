@@ -22,7 +22,7 @@ const UserLogs = () => {
         <div className="container-fluid py-4">
             <Card className="shadow mb-4">
                 <Card.Header className="py-3 d-flex justify-content-between align-items-center">
-                    <h5 className="m-0 fw-bold text-primary">Log Aktivitas Pengguna</h5>
+                    <h5 className="m-0 fw-bold text-dark">Log Aktivitas Pengguna</h5>
                 </Card.Header>
                 <Card.Body>
                     <div className="table-responsive">

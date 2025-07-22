@@ -12,7 +12,6 @@ import {
     FaChevronUp,
     FaMoneyBill,
 } from "react-icons/fa";
-import { Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 
 function SidebarResepsionis() {
@@ -20,9 +19,22 @@ function SidebarResepsionis() {
     const [openTransaksi, setOpenTransaksi] = useState(false);
     const [openLaporan, setOpenLaporan] = useState(false);
 
+    const navLinkStyle = {
+        display: "flex",
+        alignItems: "center",
+        color: "#ffffff",
+        padding: "8px 16px",
+        textDecoration: "none",
+        borderRadius: "6px",
+        fontSize: "14px",
+    };
+
+    const navLinkActive = {
+        backgroundColor: "#495057",
+    };
+
     return (
         <div
-            className="bg-light border-end"
             style={{
                 width: "240px",
                 height: "100vh",
@@ -30,92 +42,153 @@ function SidebarResepsionis() {
                 top: "56px",
                 left: 0,
                 zIndex: 1030,
-                fontSize: "14px",
-                display: "flex",
-                flexDirection: "column",
+                backgroundColor: "#343a40",
+                color: "#ffffff",
+                overflowY: "auto",
+                paddingTop: "20px",
             }}
         >
-            <Nav className="flex-column p-3">
-                <h5 className="mb-4">Menu</h5>
+            <div className="px-3">
+                <h5 className="text-white mb-4">Menu</h5>
 
-                <Nav.Link as={NavLink} to="/dashboard" end className="mb-2">
+                {/* Dashboard */}
+                <NavLink
+                    to="/dashboard"
+                    end
+                    style={({ isActive }) =>
+                        isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                    }
+                >
                     <FaHome className="me-2" /> Dashboard
-                </Nav.Link>
+                </NavLink>
 
                 {/* Master Data */}
-                <div className="mb-2">
+                <div className="mt-3">
                     <div
-                        className="d-flex align-items-center justify-content-between nav-link"
-                        style={{ cursor: "pointer" }}
                         onClick={() => setOpenMaster(!openMaster)}
+                        style={{
+                            ...navLinkStyle,
+                            justifyContent: "space-between",
+                            cursor: "pointer",
+                        }}
                     >
-                        <span><FaBed className="me-2" /> Master Data</span>
+                        <span>
+                            <FaBed className="me-2" /> Master Data
+                        </span>
                         {openMaster ? <FaChevronUp /> : <FaChevronDown />}
                     </div>
                     {openMaster && (
-                        <div className="ms-3 mt-2">
-                            <Nav.Link as={NavLink} to="/rooms" className="mb-1">
+                        <div className="ms-3 mt-2 d-flex flex-column gap-2">
+                            <NavLink
+                                to="/rooms"
+                                style={({ isActive }) =>
+                                    isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                                }
+                            >
                                 <FaDoorClosed className="me-2" /> Data Kamar
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/guests" className="mb-1">
+                            </NavLink>
+                            <NavLink
+                                to="/guests"
+                                style={({ isActive }) =>
+                                    isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                                }
+                            >
                                 <FaUsers className="me-2" /> Data Tamu
-                            </Nav.Link>
-
+                            </NavLink>
                         </div>
                     )}
                 </div>
 
                 {/* Transaksi */}
-                <div className="mb-2">
+                <div className="mt-3">
                     <div
-                        className="d-flex align-items-center justify-content-between nav-link"
-                        style={{ cursor: "pointer" }}
                         onClick={() => setOpenTransaksi(!openTransaksi)}
+                        style={{
+                            ...navLinkStyle,
+                            justifyContent: "space-between",
+                            cursor: "pointer",
+                        }}
                     >
-                        <span><FaExchangeAlt className="me-2" /> Transaksi</span>
+                        <span>
+                            <FaExchangeAlt className="me-2" /> Transaksi
+                        </span>
                         {openTransaksi ? <FaChevronUp /> : <FaChevronDown />}
                     </div>
                     {openTransaksi && (
-                        <div className="ms-3 mt-2">
-                            <Nav.Link as={NavLink} to="/guest-form" className="mb-1">
+                        <div className="ms-3 mt-2 d-flex flex-column gap-2">
+                            <NavLink
+                                to="/guest-form"
+                                style={({ isActive }) =>
+                                    isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                                }
+                            >
                                 <FaUsers className="me-2" /> Tamu
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/reservation-form" className="mb-1">
+                            </NavLink>
+                            <NavLink
+                                to="/reservation-form"
+                                style={({ isActive }) =>
+                                    isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                                }
+                            >
                                 <FaClipboardList className="me-2" /> Reservasi
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/services" className="mb-1">
+                            </NavLink>
+                            <NavLink
+                                to="/services"
+                                style={({ isActive }) =>
+                                    isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                                }
+                            >
                                 <FaConciergeBell className="me-2" /> Layanan Kamar
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/payments" className="mb-1">
+                            </NavLink>
+                            <NavLink
+                                to="/payments"
+                                style={({ isActive }) =>
+                                    isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                                }
+                            >
                                 <FaMoneyBill className="me-2" /> Pembayaran
-                            </Nav.Link>
-
+                            </NavLink>
                         </div>
                     )}
                 </div>
 
                 {/* Laporan */}
-                <div className="mb-2">
+                <div className="mt-3">
                     <div
-                        className="d-flex align-items-center justify-content-between nav-link"
-                        style={{ cursor: "pointer" }}
                         onClick={() => setOpenLaporan(!openLaporan)}
+                        style={{
+                            ...navLinkStyle,
+                            justifyContent: "space-between",
+                            cursor: "pointer",
+                        }}
                     >
-                        <span><FaChartBar className="me-2" /> Laporan</span>
+                        <span>
+                            <FaChartBar className="me-2" /> Laporan
+                        </span>
                         {openLaporan ? <FaChevronUp /> : <FaChevronDown />}
                     </div>
                     {openLaporan && (
-                        <div className="ms-3 mt-2">
-                            <Nav.Link as={NavLink} to="/reports/reservations" className="mb-1">
+                        <div className="ms-3 mt-2 d-flex flex-column gap-2">
+                            <NavLink
+                                to="/reports/reservations"
+                                style={({ isActive }) =>
+                                    isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                                }
+                            >
                                 <FaClipboardList className="me-2" /> Laporan Reservasi
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/reports/rooms" className="mb-1">
+                            </NavLink>
+                            <NavLink
+                                to="/reports/rooms"
+                                style={({ isActive }) =>
+                                    isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle
+                                }
+                            >
                                 <FaDoorClosed className="me-2" /> Laporan Kamar
-                            </Nav.Link>
+                            </NavLink>
                         </div>
                     )}
                 </div>
-            </Nav>
+            </div>
         </div>
     );
 }

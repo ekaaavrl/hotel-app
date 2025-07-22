@@ -67,7 +67,7 @@ const Payments = () => {
         <div className="container-fluid py-4">
             <Card className="shadow mb-4">
                 <Card.Header className="py-3 d-flex justify-content-between align-items-center">
-                    <h5 className="m-0 fw-bold text-primary">Data Pembayaran</h5>
+                    <h5 className="m-0 fw-bold text-dark">Data Pembayaran</h5>
                     <Button variant="primary" size="sm" onClick={() => setShow(true)}>
                         + Tambah
                     </Button>

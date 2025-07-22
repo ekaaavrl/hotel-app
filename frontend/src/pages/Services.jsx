@@ -84,7 +84,7 @@ const RoomServices = () => {
         <div className="p-4">
             <Card className="shadow-sm">
                 <Card.Header className="d-flex justify-content-between align-items-center">
-                    <h5 className="fw-bold text-primary m-0">Layanan Kamar</h5>
+                    <h5 className="fw-bold text-dark m-0">Layanan Kamar</h5>
                     <Button size="sm" onClick={() => handleShow()}>+ Tambah</Button>
                 </Card.Header>
                 <Card.Body>

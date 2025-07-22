@@ -160,8 +160,11 @@ const ReservationForm = () => {
 
     return (
         <div className="p-4">
-            <h3 className="fw-bold mb-3">Manajemen Reservasi</h3>
-            <Card>
+            <Card className="shadow">
+                <Card.Header className="py-3 d-flex justify-content-between align-items-center">
+                    <h5 className="m-0 fw-bold text-dark">Manajemen Reservasi</h5>
+                </Card.Header>
+
                 <Card.Body>
                     <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3">
                         <Tab eventKey="form" title={editId ? "Edit Reservasi" : "Form Reservasi"}>
@@ -353,5 +356,4 @@ const ReservationForm = () => {
         </div>
     );
 };
-
 export default ReservationForm;

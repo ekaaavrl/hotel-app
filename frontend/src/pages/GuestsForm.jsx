@@ -46,7 +46,7 @@ const GuestForm = () => {
         <div className="container-fluid py-4">
             <Card className="shadow mb-4">
                 <Card.Header className="py-3">
-                    <h5 className="m-0 fw-bold text-primary">{editId ? "Edit Tamu" : "Form Tambah Tamu"}</h5>
+                    <h5 className="m-0 fw-bold text-dark">{editId ? "Edit Tamu" : "Form Tambah Tamu"}</h5>
                 </Card.Header>
                 <Card.Body>
                     {error && <Alert variant="danger">{error}</Alert>}
@@ -113,7 +113,7 @@ const GuestForm = () => {
                         </Row>
 
                         <div className="d-flex gap-2">
-                            <Button type="submit" variant="success">
+                            <Button type="submit" variant="primary">
                                 {editId ? "Update" : "Simpan"} Tamu
                             </Button>
                             {editId && (
