@@ -97,11 +97,11 @@ function SidebarAdmin() {
                                 <Nav.Link as={NavLink} to="/reservation-form" className="mb-1">
                                     <FaClipboardList className="me-2" /> Reservasi
                                 </Nav.Link>
-                                <Nav.Link as={NavLink} to="/payments" className="mb-1">
-                                    <FaMoneyBill className="me-2" /> Pembayaran
-                                </Nav.Link>
                                 <Nav.Link as={NavLink} to="/services" className="mb-1">
                                     <FaConciergeBell className="me-2" /> Layanan Kamar
+                                </Nav.Link>
+                                <Nav.Link as={NavLink} to="/payments" className="mb-1">
+                                    <FaMoneyBill className="me-2" /> Pembayaran
                                 </Nav.Link>
                             </div>
                         )}

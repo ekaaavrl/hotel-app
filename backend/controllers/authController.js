@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const db = require('../config/db');
-
 const jwt = require("jsonwebtoken");
+const UserLog = require("../models/userLogModel");
 
 const login = async (req, res) => {
     const { username, password } = req.body;
@@ -19,6 +19,13 @@ const login = async (req, res) => {
         { expiresIn: "1d" }
     );
 
+    // ✅ Ambil IP: fake jika development, asli jika production
+    const isDev = process.env.NODE_ENV !== "production";
+    const ip = isDev ? "192.168.88.45" : (req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+    // ✅ Simpan log aktivitas login
+    await UserLog.addLog(user.user_id, "login", "Login berhasil", ip);
+
     res.json({
         token,
         user: {
@@ -28,4 +35,5 @@ const login = async (req, res) => {
         },
     });
 };
+
 module.exports = { login };

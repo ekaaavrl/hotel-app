@@ -88,6 +88,7 @@ const ReservationForm = () => {
                 check_out_date: form.check_out_date,
                 number_of_guests: form.number_of_guests,
                 status: form.status,
+                total_price: totalPrice, // tambahkan ini
             };
 
             if (editId) {

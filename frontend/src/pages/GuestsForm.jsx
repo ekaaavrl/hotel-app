@@ -43,9 +43,11 @@ const GuestForm = () => {
     };
 
     return (
-        <div className="p-4">
-            <h3 className="fw-bold mb-3">Form Tamu</h3>
-            <Card>
+        <div className="container-fluid py-4">
+            <Card className="shadow mb-4">
+                <Card.Header className="py-3">
+                    <h5 className="m-0 fw-bold text-primary">{editId ? "Edit Tamu" : "Form Tambah Tamu"}</h5>
+                </Card.Header>
                 <Card.Body>
                     {error && <Alert variant="danger">{error}</Alert>}
                     {success && <Alert variant="success">{success}</Alert>}
@@ -111,7 +113,7 @@ const GuestForm = () => {
                         </Row>
 
                         <div className="d-flex gap-2">
-                            <Button type="submit" variant="primary">
+                            <Button type="submit" variant="success">
                                 {editId ? "Update" : "Simpan"} Tamu
                             </Button>
                             {editId && (

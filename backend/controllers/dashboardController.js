@@ -1,13 +1,9 @@
 const db = require("../config/db");
-
-exports.getDashboardStats = async (req, res) => {
+const getDashboardStats = async (req, res) => {
   try {
-    const today = new Date().toISOString().slice(0, 10);
-
     const [guestsToday] = await db.query(`
-      SELECT COUNT(*) AS total 
-      FROM guests 
-      WHERE DATE(created_at) = CURDATE()
+      SELECT COUNT(*) AS total FROM reservations
+      WHERE DATE(check_in_date) = CURDATE()
     `);
 
     const [roomsAvailable] = await db.query(`
@@ -30,106 +26,84 @@ exports.getDashboardStats = async (req, res) => {
     `);
 
     const [activeReservations] = await db.query(`
-      SELECT COUNT(*) AS total 
-      FROM reservations 
-      WHERE status IN ('checked_in', 'booked')
+      SELECT COUNT(*) AS total FROM reservations
+      WHERE status IN ('booked', 'checked_in')
     `);
+
     const [incomeToday] = await db.query(`
-      SELECT SUM(amount_paid) AS total 
-      FROM payments 
+      SELECT SUM(amount_paid) AS total FROM payments
       WHERE DATE(payment_date) = CURDATE()
     `);
 
     res.json({
-      guestsToday: guestsToday[0].total,
-      roomsAvailable: roomsAvailable[0].total,
-      activeReservations: activeReservations[0].total,
+      guestsToday: guestsToday[0].total || 0,
+      roomsAvailable: roomsAvailable[0].total || 0,
+      activeReservations: activeReservations[0].total || 0,
       incomeToday: incomeToday[0].total || 0
     });
-  } catch (error) {
-    console.error("Dashboard Error:", error);
-    res.status(500).json({ message: "Gagal mengambil data dashboard" });
+  } catch (err) {
+    res.status(500).json({ message: "Gagal ambil data dashboard", error: err.message });
   }
 };
 
-exports.getDashboardSummary = async (req, res) => {
+// ✅ Tambahan Summary Chart untuk grafik pendapatan 7 hari terakhir
+const getSummaryChart = async (req, res) => {
   try {
-    const today = new Date().toISOString().split("T")[0];
-
-    // 1. Jumlah tamu check-in hari ini
-    const [guestsToday] = await db.query(`
-      SELECT COUNT(*) AS total FROM reservations 
-      WHERE DATE(check_in_date) = ? AND status = 'checked_in'
-    `, [today]);
-
-    res.json({
-      success: true,
-      data: {
-        guestsToday: guestsToday[0].total,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Gagal mengambil data dashboard" });
-  }
-};
-
-exports.getAvailableRoomsToday = async (req, res) => {
-  try {
-    const today = new Date().toISOString().slice(0, 10);
-
-    const [rows] = await db.query(
-      `
-      SELECT COUNT(*) AS available_rooms
-      FROM rooms r
-      WHERE NOT EXISTS (
-          SELECT 1 FROM reservations res
-          WHERE res.room_id = r.room_id
-          AND res.status = 'checked_in'
-          AND ? >= res.check_in_date
-          AND ? < res.check_out_date
-      )
-      `
-      ,
-      [today, today]
-    );
-
-    res.json({
-      success: true,
-      data: rows[0].available_rooms,
-    });
-  } catch (error) {
-    console.error("AvailableRooms Error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Gagal mengambil data kamar tersedia",
-    });
-  }
-};
-
-//Total income today
-exports.getIncomeToday = async (req, res) => {
-  try {
-    const today = new Date().toISOString().slice(0, 10);
-
-    const [rows] = await db.query(
-      `
-      SELECT IFNULL(SUM(amount_paid), 0) AS income_today
+    const [rows] = await db.query(`
+      SELECT 
+        DATE(payment_date) AS date,
+        SUM(amount_paid) AS total
       FROM payments
-      WHERE DATE(payment_date) = ?
-      `,
-      [today]
-    );
+      WHERE payment_date >= CURDATE() - INTERVAL 6 DAY
+      GROUP BY DATE(payment_date)
+      ORDER BY date ASC
+    `);
 
-    res.json({
-      success: true,
-      data: rows[0].income_today,
-    });
-  } catch (error) {
-    console.error("IncomeToday Error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Gagal mengambil data pemasukan hari ini",
-    });
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: "Gagal ambil data chart", error: err.message });
   }
+};
+const getReservationChart = async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT 
+        DATE(check_in_date) AS date,
+        COUNT(*) AS total
+      FROM reservations
+      WHERE check_in_date >= CURDATE() - INTERVAL 6 DAY
+      GROUP BY DATE(check_in_date)
+      ORDER BY date ASC
+    `);
+
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: "Gagal ambil data chart reservasi", error: err.message });
+  }
+};
+
+const getServiceChart = async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT 
+        DATE(request_date) AS date,
+        COUNT(*) AS total
+      FROM room_services
+      WHERE request_date >= CURDATE() - INTERVAL 6 DAY
+      GROUP BY DATE(request_date)
+      ORDER BY date ASC
+    `);
+
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: "Gagal ambil data chart layanan", error: err.message });
+  }
+};
+
+module.exports = {
+  getDashboardStats,
+  getSummaryChart,
+  getReservationChart,
+  getServiceChart,
+
 };

@@ -10,6 +10,7 @@ import {
     FaDoorClosed,
     FaChevronDown,
     FaChevronUp,
+    FaMoneyBill,
 } from "react-icons/fa";
 import { Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
@@ -85,6 +86,10 @@ function SidebarResepsionis() {
                             <Nav.Link as={NavLink} to="/services" className="mb-1">
                                 <FaConciergeBell className="me-2" /> Layanan Kamar
                             </Nav.Link>
+                            <Nav.Link as={NavLink} to="/payments" className="mb-1">
+                                <FaMoneyBill className="me-2" /> Pembayaran
+                            </Nav.Link>
+
                         </div>
                     )}
                 </div>

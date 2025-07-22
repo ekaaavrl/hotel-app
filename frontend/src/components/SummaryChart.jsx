@@ -10,13 +10,22 @@ import {
 } from "recharts";
 
 const SummaryChart = ({ data }) => {
+    // Format tanggal agar tidak tampil timezone
+    const formattedData = data.map((item) => ({
+        ...item,
+        date: new Date(item.date).toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "short",
+        }),
+    }));
+
     return (
         <div className="bg-white shadow rounded p-4 h-100">
-            <h2 style={{ fontSize: "18px" }} className="font-semibold mb-3">
+            <h2 style={{ fontSize: "16px" }} className="font-semibold mb-3">
                 Pendapatan 7 Hari Terakhir
             </h2>
             <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data}>
+                <LineChart data={formattedData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
