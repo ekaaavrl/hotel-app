@@ -28,12 +28,14 @@ function SidebarResepsionis() {
                 position: "fixed",
                 top: "56px",
                 left: 0,
-                overflowY: "auto",
                 zIndex: 1030,
+                fontSize: "14px",
+                display: "flex",
+                flexDirection: "column",
             }}
         >
             <Nav className="flex-column p-3">
-                <h5 className="mb-4">📋 Menu</h5>
+                <h5 className="mb-4">Menu</h5>
 
                 <Nav.Link as={NavLink} to="/dashboard" end className="mb-2">
                     <FaHome className="me-2" /> Dashboard
@@ -57,6 +59,7 @@ function SidebarResepsionis() {
                             <Nav.Link as={NavLink} to="/guests" className="mb-1">
                                 <FaUsers className="me-2" /> Data Tamu
                             </Nav.Link>
+
                         </div>
                     )}
                 </div>
@@ -73,6 +76,9 @@ function SidebarResepsionis() {
                     </div>
                     {openTransaksi && (
                         <div className="ms-3 mt-2">
+                            <Nav.Link as={NavLink} to="/guest-form" className="mb-1">
+                                <FaUsers className="me-2" /> Tamu
+                            </Nav.Link>
                             <Nav.Link as={NavLink} to="/reservation-form" className="mb-1">
                                 <FaClipboardList className="me-2" /> Reservasi
                             </Nav.Link>

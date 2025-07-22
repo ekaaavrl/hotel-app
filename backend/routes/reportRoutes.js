@@ -1,23 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const reportController = require("../controllers/reportController");
 const { auth } = require("../middleware/authMiddleware");
-const {
-    getHistoryPayments,
-    getDailyReservations,
-    getIncomeReport,
-    getRoomReport
-} = require("../controllers/reportController");
 
-// 📜 History Pembayaran
-router.get("/history", auth, getHistoryPayments);
-
-// 📅 Laporan Reservasi Harian
-router.get("/reservations", auth, getDailyReservations);
-
-// 💰 Laporan Pendapatan
-router.get("/income", auth, getIncomeReport);
-
-// 🛏️ Laporan Kamar (dengan filter ?status=)
-router.get("/rooms", auth, getRoomReport);
+router.get("/income", auth, reportController.getIncomeReport);
+router.get("/history", auth, reportController.getHistoryPayments);
+router.get("/reservations", auth, reportController.getDailyReservations);
+router.get("/rooms", auth, reportController.getRoomReport);
 
 module.exports = router;

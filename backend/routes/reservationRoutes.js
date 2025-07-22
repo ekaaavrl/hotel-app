@@ -1,12 +1,11 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const {
-    createReservation,
-    getReservations, // tambahkan ini
-} = require("../controllers/reservationController");
-const { auth } = require("../middleware/authMiddleware");
+const reservationController = require('../controllers/reservationController');
 
-router.get("/", auth, getReservations); // tambahkan ini
-router.post("/", auth, createReservation);
+router.get('/', reservationController.getReservations);
+router.get('/:id', reservationController.getReservationById);
+router.post('/', reservationController.createReservation);
+router.put('/:id', reservationController.updateReservation);
+router.delete('/:id', reservationController.deleteReservation);
 
 module.exports = router;

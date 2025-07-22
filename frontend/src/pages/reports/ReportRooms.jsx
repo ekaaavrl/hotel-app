@@ -5,16 +5,18 @@ import { Table, Form, Badge, Row, Col, Card } from "react-bootstrap";
 const ReportRooms = () => {
     const [rooms, setRooms] = useState([]);
     const [statusFilter, setStatusFilter] = useState("all");
+    const [searchQuery, setSearchQuery] = useState("");
     const [summary, setSummary] = useState({ available: 0, occupied: 0, maintenance: 0 });
 
     const fetchRooms = async () => {
         try {
-            const endpoint = statusFilter === "all" ? "/reports/rooms" : `/reports/rooms?status=${statusFilter}`;
+            const endpoint = statusFilter === "all"
+                ? "/reports/rooms"
+                : `/reports/rooms?status=${statusFilter}`;
             const res = await api.get(endpoint);
             setRooms(res.data);
 
             if (statusFilter === "all") {
-                // Hitung ringkasan
                 const count = { available: 0, occupied: 0, maintenance: 0 };
                 res.data.forEach((r) => {
                     count[r.status] = (count[r.status] || 0) + 1;
@@ -30,83 +32,106 @@ const ReportRooms = () => {
         fetchRooms();
     }, [statusFilter]);
 
+    const filteredRooms = rooms.filter((room) =>
+        room.room_number.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="p-4">
-            <h3 className="fw-bold mb-4">Laporan Status Kamar</h3>
+            <Card className="shadow-sm">
+                <Card.Header className="bg-white d-flex justify-content-between align-items-center">
+                    <h5 className="fw-bold text-primary m-0">Laporan Status Kamar</h5>
+                </Card.Header>
+                <Card.Body>
+                    <Row className="mb-3">
+                        <Col md={4}>
+                            <Form.Group>
+                                <Form.Label>Status</Form.Label>
+                                <Form.Select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                >
+                                    <option value="all">Semua</option>
+                                    <option value="available">Tersedia</option>
+                                    <option value="occupied">Ditempati</option>
+                                    <option value="maintenance">Maintenance</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                            <Form.Group>
+                                <Form.Label>Cari Nomor Kamar</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Cari..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-            {/* Summary cards */}
-            {statusFilter === "all" && (
-                <Row className="mb-4">
-                    <Col md={4}>
-                        <Card className="text-center border-start border-success border-4">
-                            <Card.Body>
-                                <Card.Title className="text-success">Tersedia</Card.Title>
-                                <h4>{summary.available}</h4>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={4}>
-                        <Card className="text-center border-start border-danger border-4">
-                            <Card.Body>
-                                <Card.Title className="text-danger">Ditempati</Card.Title>
-                                <h4>{summary.occupied}</h4>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={4}>
-                        <Card className="text-center border-start border-warning border-4">
-                            <Card.Body>
-                                <Card.Title className="text-warning">Maintenance</Card.Title>
-                                <h4>{summary.maintenance}</h4>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            )}
-            {/* Filter */}
-            <Form.Group className="mb-3" style={{ maxWidth: "300px" }}>
-                <Form.Label>Filter Status</Form.Label>
-                <Form.Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                    <option value="all">Semua</option>
-                    <option value="available">Tersedia</option>
-                    <option value="occupied">Ditempati</option>
-                    <option value="maintenance">Maintenance</option>
-                </Form.Select>
-            </Form.Group>
+                    <Row className="mb-4">
+                        <Col>
+                            <Badge bg="success" className="p-2 w-100 text-start">
+                                Tersedia: {summary.available}
+                            </Badge>
+                        </Col>
+                        <Col>
+                            <Badge bg="danger" className="p-2 w-100 text-start">
+                                Ditempati: {summary.occupied}
+                            </Badge>
+                        </Col>
+                        <Col>
+                            <Badge bg="warning" text="dark" className="p-2 w-100 text-start">
+                                Maintenance: {summary.maintenance}
+                            </Badge>
+                        </Col>
+                    </Row>
 
-            {/* Tabel data */}
-            <Table striped bordered hover responsive>
-                <thead className="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Nomor Kamar</th>
-                        <th>Tipe</th>
-                        <th>Harga / Malam</th>
-                        <th>Status</th>
-                        <th>Deskripsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rooms.map((room, i) => (
-                        <tr key={room.room_id}>
-                            <td>{i + 1}</td>
-                            <td>{room.room_number}</td>
-                            <td>{room.type_name}</td>
-                            <td>Rp{parseInt(room.price_per_night).toLocaleString("id-ID")}</td>
-                            <td>
-                                <Badge bg={
-                                    room.status === "available" ? "success" :
-                                        room.status === "occupied" ? "danger" :
-                                            "warning"
-                                }>
-                                    {room.status}
-                                </Badge>
-                            </td>
-                            <td>{room.description || "-"}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+                    <div className="table-responsive">
+                        <Table striped bordered hover size="sm" style={{ fontSize: "13px" }}>
+                            <thead className="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nomor Kamar</th>
+                                    <th>Tipe</th>
+                                    <th>Harga / Malam</th>
+                                    <th>Status</th>
+                                    <th>Deskripsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredRooms.map((room, i) => (
+                                    <tr key={room.room_id}>
+                                        <td>{i + 1}</td>
+                                        <td>{room.room_number}</td>
+                                        <td>{room.type_name}</td>
+                                        <td>Rp{parseInt(room.price_per_night).toLocaleString("id-ID")}</td>
+                                        <td>
+                                            <Badge bg={
+                                                room.status === "available" ? "success" :
+                                                    room.status === "occupied" ? "danger" :
+                                                        "warning"
+                                            }>
+                                                {room.status}
+                                            </Badge>
+                                        </td>
+                                        <td>{room.description || "-"}</td>
+                                    </tr>
+                                ))}
+                                {filteredRooms.length === 0 && (
+                                    <tr>
+                                        <td colSpan="6" className="text-center text-muted">
+                                            Tidak ada data kamar.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </Table>
+                    </div>
+                </Card.Body>
+            </Card>
         </div>
     );
 };

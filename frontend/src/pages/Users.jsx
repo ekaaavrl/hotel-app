@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import { Table, Button, Modal, Form } from "react-bootstrap";
+import { Table, Button, Modal, Form, Card } from "react-bootstrap";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -16,8 +17,12 @@ const Users = () => {
     });
 
     const fetchUsers = async () => {
-        const res = await api.get("/users");
-        setUsers(res.data);
+        try {
+            const res = await api.get("/users");
+            setUsers(res.data);
+        } catch (err) {
+            console.error("Gagal ambil pengguna:", err);
+        }
     };
 
     useEffect(() => {
@@ -28,7 +33,14 @@ const Users = () => {
         setEditingId(data?.user_id || null);
         setForm(
             data
-                ? { ...data, password: "" } // kosongkan password saat edit
+                ? {
+                    username: data.username,
+                    password: "",
+                    full_name: data.full_name,
+                    email: data.email,
+                    role: data.role,
+                    status: data.status,
+                }
                 : {
                     username: "",
                     password: "",
@@ -43,78 +55,92 @@ const Users = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (editingId) {
-            await api.put(`/users/${editingId}`, form);
-        } else {
-            await api.post("/users", form);
+        try {
+            if (editingId) {
+                await api.put(`/users/${editingId}`, form);
+            } else {
+                await api.post("/users", form);
+            }
+            setShow(false);
+            setEditingId(null);
+            fetchUsers();
+        } catch (err) {
+            console.error("Gagal menyimpan user:", err);
         }
-        setShow(false);
-        fetchUsers();
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Yakin hapus user ini?")) {
+        if (window.confirm("Yakin ingin menghapus pengguna ini?")) {
             await api.delete(`/users/${id}`);
             fetchUsers();
         }
     };
 
     return (
-        <div className="p-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3 className="fw-bold">Data Pengguna</h3>
-                <Button variant="primary" onClick={() => handleShow()}>
-                    + Tambah
-                </Button>
-            </div>
+        <div className="container-fluid py-4">
+            <Card className="shadow mb-4">
+                <Card.Header className="py-3 d-flex justify-content-between align-items-center">
+                    <h5 className="m-0 fw-bold text-primary">Data Pengguna</h5>
+                    <Button variant="primary" size="sm" onClick={() => handleShow()}>
+                        + Tambah
+                    </Button>
+                </Card.Header>
+                <Card.Body>
+                    <div className="table-responsive">
+                        <Table bordered hover id="dataTable" className="table" width="100%" style={{ fontSize: "13px" }}>
+                            <thead className="thead-light">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Username</th>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Ditambahkan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {users.map((u, i) => (
+                                    <tr key={u.user_id}>
+                                        <td>{i + 1}</td>
+                                        <td>{u.username}</td>
+                                        <td>{u.full_name}</td>
+                                        <td>{u.email}</td>
+                                        <td>{u.role}</td>
+                                        <td>
+                                            <span className={`badge px-2 py-1 ${u.status === "active" ? "bg-success text-white" : "bg-danger text-white"}`}>
+                                                {u.status === "active" ? "Aktif" : "Nonaktif"}
+                                            </span>
+                                        </td>
+                                        <td>{new Date(u.created_at).toLocaleString("id-ID")}</td>
+                                        <td>
+                                            <Button
+                                                variant="outline-primary"
+                                                size="sm"
+                                                className="me-2"
+                                                onClick={() => handleShow(u)}
+                                            >
+                                                <FaEdit />
+                                            </Button>
+                                            <Button
+                                                variant="outline-danger"
+                                                size="sm"
+                                                onClick={() => handleDelete(u.user_id)}
+                                            >
+                                                <FaTrash />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
+                </Card.Body>
+            </Card>
 
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Username</th>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Ditambahkan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((u, i) => (
-                        <tr key={u.user_id}>
-                            <td>{i + 1}</td>
-                            <td>{u.username}</td>
-                            <td>{u.full_name}</td>
-                            <td>{u.email}</td>
-                            <td>{u.role}</td>
-                            <td>{u.status}</td>
-                            <td>{new Date(u.created_at).toLocaleString("id-ID")}</td>
-                            <td>
-                                <Button
-                                    size="sm"
-                                    variant="warning"
-                                    className="me-2"
-                                    onClick={() => handleShow(u)}
-                                >
-                                    Edit
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant="danger"
-                                    onClick={() => handleDelete(u.user_id)}
-                                >
-                                    Hapus
-                                </Button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-
-            {/* Modal Form User */}
-            <Modal show={show} onHide={() => setShow(false)}>
+            {/* Modal Form */}
+            <Modal show={show} onHide={() => setShow(false)} style={{ fontSize: "14px" }}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
                         <Modal.Title>{editingId ? "Edit" : "Tambah"} Pengguna</Modal.Title>
@@ -130,7 +156,6 @@ const Users = () => {
                                         required
                                     />
                                 </Form.Group>
-
                                 <Form.Group className="mb-2">
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
@@ -165,7 +190,7 @@ const Users = () => {
                                 onChange={(e) => setForm({ ...form, role: e.target.value })}
                             >
                                 <option value="admin">Admin</option>
-                                <option value="receptionist">Receptionist</option>
+                                <option value="resepsionis">Resepsionis</option>
                                 <option value="manager">Manager</option>
                                 <option value="staff">Staff</option>
                             </Form.Select>
@@ -182,6 +207,9 @@ const Users = () => {
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShow(false)}>
+                            Batal
+                        </Button>
                         <Button type="submit" variant="success">
                             Simpan
                         </Button>

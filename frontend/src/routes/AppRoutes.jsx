@@ -3,6 +3,7 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import Guests from "../pages/Guests";
+import GuestForm from "../pages/GuestsForm";
 import Layout from "../components/Layout";
 import RoomTypes from "../pages/RoomsType";
 import Rooms from "../pages/Rooms";
@@ -18,6 +19,7 @@ import ReportIncome from "../pages/reports/ReportIncome";
 import ReportRooms from "../pages/reports/ReportRooms";
 import UserLogs from "../pages/UserLogs";
 import PrivateRoute from "../components/PrivateRoute";
+import Unauthorized from "../pages/Unauthorized";
 
 const AppRoutes = () => (
     <Routes>
@@ -26,7 +28,7 @@ const AppRoutes = () => (
         <Route
             path="/dashboard"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <Dashboard />
                     </Layout>
@@ -36,15 +38,17 @@ const AppRoutes = () => (
         <Route
             path="/profile"
             element={
-                <Layout>
-                    <Profile />
-                </Layout>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                    <Layout>
+                        <Profile />
+                    </Layout>
+                </PrivateRoute>
             }
         />
         <Route
             path="/guests"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <Guests />
                     </Layout>
@@ -52,9 +56,19 @@ const AppRoutes = () => (
             }
         />
         <Route
+            path="/guest-form"
+            element={
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                    <Layout>
+                        <GuestForm />
+                    </Layout>
+                </PrivateRoute>
+            }
+        />
+        <Route
             path="/room-types"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin"]}>
                     <Layout>
                         <RoomTypes />
                     </Layout>
@@ -64,7 +78,7 @@ const AppRoutes = () => (
         <Route
             path="/rooms"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <Rooms />
                     </Layout>
@@ -74,7 +88,7 @@ const AppRoutes = () => (
         <Route
             path="/reservation-form"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <ReservationForm />
                     </Layout>
@@ -84,7 +98,7 @@ const AppRoutes = () => (
         <Route
             path="/reservations"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <Reservations />
                     </Layout>
@@ -94,7 +108,7 @@ const AppRoutes = () => (
         <Route
             path="/payments"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <Payments />
                     </Layout>
@@ -104,7 +118,7 @@ const AppRoutes = () => (
         <Route
             path="/staff"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin"]}>
                     <Layout>
                         <Staff />
                     </Layout>
@@ -114,7 +128,7 @@ const AppRoutes = () => (
         <Route
             path="/users"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin"]}>
                     <Layout>
                         <Users />
                     </Layout>
@@ -124,7 +138,7 @@ const AppRoutes = () => (
         <Route
             path="/services"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <RoomServices />
                     </Layout>
@@ -134,7 +148,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/history"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin"]}>
                     <Layout>
                         <ReportHistory />
                     </Layout>
@@ -144,7 +158,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/reservations"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <ReportReservations />
                     </Layout>
@@ -154,7 +168,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/income"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin"]}>
                     <Layout>
                         <ReportIncome />
                     </Layout>
@@ -164,7 +178,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/rooms"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <ReportRooms />
                     </Layout>
@@ -174,13 +188,14 @@ const AppRoutes = () => (
         <Route
             path="/logs"
             element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["admin"]}>
                     <Layout>
                         <UserLogs />
                     </Layout>
                 </PrivateRoute>
             }
         />
+        <Route path="/unauthorized" element={<Unauthorized />} />
     </Routes>
 );
 

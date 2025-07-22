@@ -12,7 +12,9 @@ import {
 const SummaryChart = ({ data }) => {
     return (
         <div className="bg-white shadow rounded p-4 h-100">
-            <h2 className="text-lg font-semibold mb-3">Pendapatan 7 Hari Terakhir</h2>
+            <h2 style={{ fontSize: "18px" }} className="font-semibold mb-3">
+                Pendapatan 7 Hari Terakhir
+            </h2>
             <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" />

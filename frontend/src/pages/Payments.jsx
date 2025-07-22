@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import { Table, Form, Button, Row, Col, Modal } from "react-bootstrap";
+import { Table, Form, Button, Row, Col, Modal, Card } from "react-bootstrap";
+import { FaTrash } from "react-icons/fa";
 
 const Payments = () => {
     const [payments, setPayments] = useState([]);
@@ -49,47 +50,60 @@ const Payments = () => {
     };
 
     return (
-        <div className="p-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3 className="fw-bold">Data Pembayaran</h3>
-                <Button variant="primary" onClick={() => setShow(true)}>+ Tambah Pembayaran</Button>
-            </div>
-
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Reservasi</th>
-                        <th>Tanggal</th>
-                        <th>Metode</th>
-                        <th>Jumlah</th>
-                        <th>Catatan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {payments.map((pay, i) => (
-                        <tr key={pay.payment_id}>
-                            <td>{i + 1}</td>
-                            <td>{pay.reservation_id}</td>
-                            <td>{new Date(pay.payment_date).toLocaleString("id-ID")}</td>
-                            <td>{pay.payment_method}</td>
-                            <td>Rp{parseInt(pay.amount_paid).toLocaleString("id-ID")}</td>
-                            <td>{pay.notes}</td>
-                            <td>
-                                <Button size="sm" variant="danger" onClick={() => handleDelete(pay.payment_id)}>Hapus</Button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+        <div className="container-fluid py-4">
+            <Card className="shadow">
+                <Card.Header className="d-flex justify-content-between align-items-center">
+                    <h5 className="m-0 fw-bold text-primary">Pembayaran</h5>
+                    <Button variant="primary" size="sm" onClick={() => setShow(true)}>
+                        + Tambah Pembayaran
+                    </Button>
+                </Card.Header>
+                <Card.Body>
+                    <div className="table-responsive">
+                        <Table bordered hover className="table" style={{ fontSize: "13px" }}>
+                            <thead className="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Reservasi</th>
+                                    <th>Tanggal</th>
+                                    <th>Metode</th>
+                                    <th>Jumlah</th>
+                                    <th>Catatan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {payments.map((pay, i) => (
+                                    <tr key={pay.payment_id}>
+                                        <td>{i + 1}</td>
+                                        <td>#{pay.reservation_id}</td>
+                                        <td>{new Date(pay.payment_date).toLocaleString("id-ID")}</td>
+                                        <td>{pay.payment_method.replace(/_/g, " ")}</td>
+                                        <td>Rp{parseInt(pay.amount_paid).toLocaleString("id-ID")}</td>
+                                        <td>{pay.notes}</td>
+                                        <td>
+                                            <Button
+                                                variant="outline-danger"
+                                                size="sm"
+                                                onClick={() => handleDelete(pay.payment_id)}
+                                            >
+                                                <FaTrash />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
+                </Card.Body>
+            </Card>
 
             {/* Modal Tambah Pembayaran */}
-            <Modal show={show} onHide={() => setShow(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Tambah Pembayaran</Modal.Title>
-                </Modal.Header>
+            <Modal show={show} onHide={() => setShow(false)} style={{ fontSize: "14px" }}>
                 <Form onSubmit={handleSubmit}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Tambah Pembayaran</Modal.Title>
+                    </Modal.Header>
                     <Modal.Body>
                         <Form.Group className="mb-2">
                             <Form.Label>Reservasi</Form.Label>
@@ -143,7 +157,12 @@ const Payments = () => {
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button type="submit" variant="success">Simpan</Button>
+                        <Button variant="secondary" onClick={() => setShow(false)}>
+                            Batal
+                        </Button>
+                        <Button type="submit" variant="success">
+                            Simpan
+                        </Button>
                     </Modal.Footer>
                 </Form>
             </Modal>

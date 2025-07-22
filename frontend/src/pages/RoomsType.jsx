@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import { Table, Button, Modal, Form } from "react-bootstrap";
+import { Table, Button, Modal, Form, Card } from "react-bootstrap";
+import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
+import { InputGroup } from "react-bootstrap";
 
 const RoomTypes = () => {
     const [roomTypes, setRoomTypes] = useState([]);
     const [show, setShow] = useState(false);
     const [form, setForm] = useState({ type_name: "", description: "", default_price: "" });
     const [editingId, setEditingId] = useState(null);
-    const [searchTerm, setSearchTerm] = useState(""); // 🔍 Search term
+    const [searchTerm, setSearchTerm] = useState("");
 
     const fetchData = async () => {
         const res = await api.get("/room-types");
@@ -40,74 +42,114 @@ const RoomTypes = () => {
         }
     };
 
-    // 🔍 Filter berdasarkan search term
     const filteredData = roomTypes.filter((item) =>
         item.type_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
-        <div className="p-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3 className="fw-bold">Tipe Kamar</h3>
-                <Button onClick={() => handleShow()}>+ Tambah</Button>
-            </div>
+        <div className="container-fluid py-4">
+            <Card className="shadow mb-4">
+                <Card.Header className="py-3 d-flex justify-content-between align-items-center">
+                    <h5 className="m-0 fw-bold text-primary">Data Tipe Kamar</h5>
+                    <Button variant="primary" size="sm" onClick={() => handleShow()}>
+                        + Tambah
+                    </Button>
+                </Card.Header>
+                <Card.Body>
+                    <InputGroup className="mb-3" style={{ maxWidth: "250px", fontSize: "13px" }}>
+                        <InputGroup.Text>
+                            <FaSearch />
+                        </InputGroup.Text>
+                        <Form.Control
+                            type="text"
+                            placeholder="Cari tipe kamar..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </InputGroup>
+                    <div className="table-responsive">
+                        <Table bordered hover className="table" width="100%" style={{ fontSize: "13px" }}>
+                            <thead className="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama Tipe</th>
+                                    <th>Harga Default</th>
+                                    <th>Deskripsi</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredData.map((item, i) => (
+                                    <tr key={item.room_type_id}>
+                                        <td>{i + 1}</td>
+                                        <td>{item.type_name}</td>
+                                        <td>Rp{parseInt(item.default_price).toLocaleString("id-ID")}</td>
+                                        <td>{item.description}</td>
+                                        <td>
+                                            <Button
+                                                size="sm"
+                                                variant="outline-primary"
+                                                className="me-2"
+                                                onClick={() => handleShow(item)}
+                                            >
+                                                <FaEdit />
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="outline-danger"
+                                                onClick={() => handleDelete(item.room_type_id)}
+                                            >
+                                                <FaTrash />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
+                </Card.Body>
+            </Card>
 
-            {/* 🔍 Search Bar */}
-            <Form.Control
-                type="text"
-                placeholder="Cari tipe kamar..."
-                className="mb-3"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
-
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nama Tipe</th>
-                        <th>Harga Default</th>
-                        <th>Deskripsi</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredData.map((item, i) => (
-                        <tr key={item.room_type_id}>
-                            <td>{i + 1}</td>
-                            <td>{item.type_name}</td>
-                            <td>Rp{parseInt(item.default_price).toLocaleString("id-ID")}</td>
-                            <td>{item.description}</td>
-                            <td>
-                                <Button size="sm" variant="warning" onClick={() => handleShow(item)}>Edit</Button>{" "}
-                                <Button size="sm" variant="danger" onClick={() => handleDelete(item.room_type_id)}>Hapus</Button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-
-            <Modal show={show} onHide={() => setShow(false)}>
+            <Modal show={show} onHide={() => setShow(false)} style={{ fontSize: "14px" }}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
                         <Modal.Title>{editingId ? "Edit" : "Tambah"} Tipe Kamar</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form.Group>
+                        <Form.Group className="mb-2">
                             <Form.Label>Nama Tipe</Form.Label>
-                            <Form.Control value={form.type_name} onChange={(e) => setForm({ ...form, type_name: e.target.value })} required />
+                            <Form.Control
+                                value={form.type_name}
+                                onChange={(e) => setForm({ ...form, type_name: e.target.value })}
+                                required
+                            />
                         </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Harga</Form.Label>
-                            <Form.Control type="number" value={form.default_price} onChange={(e) => setForm({ ...form, default_price: e.target.value })} required />
+                        <Form.Group className="mb-2">
+                            <Form.Label>Harga Default</Form.Label>
+                            <Form.Control
+                                type="number"
+                                value={form.default_price}
+                                onChange={(e) => setForm({ ...form, default_price: e.target.value })}
+                                required
+                            />
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group className="mb-2">
                             <Form.Label>Deskripsi</Form.Label>
-                            <Form.Control as="textarea" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                            <Form.Control
+                                as="textarea"
+                                rows={2}
+                                value={form.description}
+                                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                            />
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button type="submit" variant="success">Simpan</Button>
+                        <Button variant="secondary" onClick={() => setShow(false)}>
+                            Batal
+                        </Button>
+                        <Button type="submit" variant="success">
+                            Simpan
+                        </Button>
                     </Modal.Footer>
                 </Form>
             </Modal>

@@ -39,47 +39,67 @@ const getDailyReservations = async () => {
 };
 
 // 💰 Laporan Pendapatan
-const getIncomeReport = async () => {
+const getIncomeReport = async (start, end) => {
     const [rows] = await db.query(`
         SELECT 
             DATE(payment_date) AS date,
-            SUM(amount_paid) AS total_income
+            SUM(amount_paid) AS total
         FROM payments
+        WHERE DATE(payment_date) BETWEEN ? AND ?
         GROUP BY DATE(payment_date)
         ORDER BY date DESC
-    `);
+    `, [start, end]);
+
     return rows;
 };
 
 // 🛏️ Laporan Kamar (dengan filter status opsional)
 const getRoomReport = async (status = null) => {
-    let query = `
-        SELECT 
-            r.room_id,
-            r.room_number,
-            rt.type_name,
-            r.price_per_night,
-            r.status,
-            r.description
-        FROM rooms r
-        JOIN room_types rt ON r.room_type_id = rt.room_type_id
-    `;
-    const params = [];
+    try {
+        let baseQuery = `
+            SELECT 
+                r.room_id,
+                r.room_number,
+                rt.type_name,
+                r.price_per_night,
+                r.description,
+                CASE 
+                    WHEN EXISTS (
+                        SELECT 1 FROM reservations res
+                        WHERE res.room_id = r.room_id
+                        AND res.status = 'checked_in'
+                        AND CURDATE() BETWEEN res.check_in_date AND res.check_out_date
+                    ) THEN 'occupied'
+                    ELSE r.status
+                END AS status
+            FROM rooms r
+            JOIN room_types rt ON r.room_type_id = rt.room_type_id
+        `;
 
-    if (status) {
-        query += " WHERE r.status = ?";
-        params.push(status);
+        if (status && status !== 'all') {
+            baseQuery = `
+                SELECT * FROM (
+                    ${baseQuery}
+                ) AS room_status
+                WHERE status = ?
+                ORDER BY room_number ASC
+            `;
+            const [rows] = await db.query(baseQuery, [status]);
+            return rows;
+        } else {
+            baseQuery += ` ORDER BY r.room_number ASC`;
+            const [rows] = await db.query(baseQuery);
+            return rows;
+        }
+    } catch (error) {
+        console.error("❌ Error in getRoomReport:", error);
+        throw error;
     }
-
-    query += " ORDER BY r.room_number ASC";
-
-    const [rows] = await db.query(query, params);
-    return rows;
 };
 
 module.exports = {
     getHistoryPayments,
     getDailyReservations,
     getIncomeReport,
-    getRoomReport
+    getRoomReport,
 };
