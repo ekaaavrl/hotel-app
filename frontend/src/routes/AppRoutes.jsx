@@ -8,7 +8,6 @@ import Layout from "../components/Layout";
 import RoomTypes from "../pages/RoomsType";
 import Rooms from "../pages/Rooms";
 import ReservationForm from "../components/ReservationForm";
-import Reservations from "../components/Reservations";
 import Payments from "../pages/Payments";
 import Staff from "../pages/Staff";
 import Users from "../pages/Users";
@@ -95,16 +94,7 @@ const AppRoutes = () => (
                 </PrivateRoute>
             }
         />
-        <Route
-            path="/reservations"
-            element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
-                    <Layout>
-                        <Reservations />
-                    </Layout>
-                </PrivateRoute>
-            }
-        />
+
         <Route
             path="/payments"
             element={

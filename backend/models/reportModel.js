@@ -1,6 +1,6 @@
 const db = require("../config/db");
 
-// 📜 History Transaksi Pembayaran
+//History Transaksi Pembayaran
 const getHistoryPayments = async () => {
     const [rows] = await db.query(`
         SELECT 
@@ -19,7 +19,7 @@ const getHistoryPayments = async () => {
     return rows;
 };
 
-// 📅 Laporan Reservasi Harian
+//Laporan Reservasi Harian
 const getDailyReservations = async () => {
     const [rows] = await db.query(`
         SELECT 
@@ -38,7 +38,7 @@ const getDailyReservations = async () => {
     return rows;
 };
 
-// 💰 Laporan Pendapatan
+//Laporan Pendapatan
 const getIncomeReport = async (start, end) => {
     const [rows] = await db.query(`
         SELECT 
@@ -53,7 +53,7 @@ const getIncomeReport = async (start, end) => {
     return rows;
 };
 
-// 🛏️ Laporan Kamar (dengan filter status opsional)
+//Laporan Kamar (dengan filter status opsional)
 const getRoomReport = async (status = null) => {
     try {
         let baseQuery = `
@@ -92,7 +92,7 @@ const getRoomReport = async (status = null) => {
             return rows;
         }
     } catch (error) {
-        console.error("❌ Error in getRoomReport:", error);
+        console.error("Error in getRoomReport:", error);
         throw error;
     }
 };

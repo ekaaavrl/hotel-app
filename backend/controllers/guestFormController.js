@@ -1,4 +1,4 @@
-const db = require("../config/db"); // Sesuaikan path ke koneksi database kamu
+const db = require("../config/db");
 
 exports.createGuest = async (req, res) => {
     const { full_name, email, phone_number, address, id_number, nationality } = req.body;

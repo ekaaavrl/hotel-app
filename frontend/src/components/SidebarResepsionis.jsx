@@ -11,6 +11,7 @@ import {
     FaChevronDown,
     FaChevronUp,
     FaMoneyBill,
+    FaDatabase,
 } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
@@ -73,7 +74,7 @@ function SidebarResepsionis() {
                         }}
                     >
                         <span>
-                            <FaBed className="me-2" /> Master Data
+                            <FaDatabase className="me-2" /> Master Data
                         </span>
                         {openMaster ? <FaChevronUp /> : <FaChevronDown />}
                     </div>

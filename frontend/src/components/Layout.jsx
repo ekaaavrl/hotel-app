@@ -30,7 +30,7 @@ function Layout({ children }) {
                 style={{
                     marginTop: "56px",
                     marginLeft: "240px",
-                    width: "calc(100vw - 240px)", // ✅ fix di sini
+                    width: "calc(100vw - 240px)",
                     padding: "24px",
                     minHeight: "calc(100vh - 56px)",
                     backgroundColor: "#f8f9fa",

@@ -46,7 +46,6 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
-// ✅ Tambahan Summary Chart untuk grafik pendapatan 7 hari terakhir
 const getSummaryChart = async (req, res) => {
   try {
     const [rows] = await db.query(`

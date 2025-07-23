@@ -78,7 +78,7 @@ const GuestForm = () => {
                             <Col md={6}>
                                 <Form.Label>No HP</Form.Label>
                                 <Form.Control
-                                    type="text"
+                                    type="number"
                                     value={form.phone_number}
                                     onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
                                 />
@@ -97,7 +97,7 @@ const GuestForm = () => {
                             <Col md={6}>
                                 <Form.Label>No KTP / Paspor</Form.Label>
                                 <Form.Control
-                                    type="text"
+                                    type="number"
                                     value={form.id_number}
                                     onChange={(e) => setForm({ ...form, id_number: e.target.value })}
                                 />

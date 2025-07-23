@@ -15,7 +15,7 @@ const ReservationChart = ({ data }) => {
         date: new Date(item.date).toLocaleDateString("id-ID", {
             day: "2-digit",
             month: "short",
-            year: "numeric", // atau bisa dihilangkan jika ingin ringkas
+            year: "numeric",
         }),
     }));
 

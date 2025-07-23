@@ -96,7 +96,7 @@ exports.getRoomReport = async (req, res) => {
             return res.json(rows);
         }
     } catch (error) {
-        console.error("❌ Gagal ambil data kamar:", error);
+        console.error("Gagal ambil data kamar:", error);
         res.status(500).json({ success: false, message: "Gagal mengambil data kamar" });
     }
 };
