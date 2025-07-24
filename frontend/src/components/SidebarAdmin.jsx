@@ -44,7 +44,7 @@ function SidebarAdmin() {
         <div
             style={{
                 width: "240px",
-                height: "100vh",
+                height: "calc(100vh - 56px)", // agar tidak lewat navbar
                 position: "fixed",
                 top: "56px",
                 left: 0,
@@ -52,8 +52,11 @@ function SidebarAdmin() {
                 backgroundColor: "#343a40",
                 color: "#ffffff",
                 overflowY: "auto",
+                overflowX: "hidden", // cegah scroll horizontal
                 paddingTop: "20px",
                 fontSize: "14px",
+                scrollbarWidth: "thin", // Firefox
+                scrollbarColor: "#888 #343a40", // Firefox
             }}
         >
             <div className="px-3">

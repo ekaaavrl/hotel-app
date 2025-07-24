@@ -91,7 +91,7 @@ const StaffList = () => {
             <Card className="shadow mb-4">
                 <Card.Header className="py-3 d-flex justify-content-between align-items-center">
                     <h5 className="m-0 fw-bold text-dark">Data Staff</h5>
-                    <Button variant="success" size="sm" onClick={() => handleShow()}>
+                    <Button variant="primary" size="sm" onClick={() => handleShow()}>
                         <FaPlus className="me-1" /> Tambah
                     </Button>
                 </Card.Header>
@@ -159,7 +159,7 @@ const StaffList = () => {
             </Card>
 
             {/* Modal Form Tambah/Edit Staff */}
-            <Modal show={show} onHide={() => setShow(false)} style={{ fontSize: "14px" }}>
+            <Modal show={show} onHide={() => setShow(false)} backdropClassName="modal-backdrop-custom" style={{ fontSize: "14px", zIndex: 2000 }}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
                         <Modal.Title>{editingId ? "Edit" : "Tambah"} Staff</Modal.Title>

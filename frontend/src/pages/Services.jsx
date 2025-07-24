@@ -213,7 +213,7 @@ const RoomServices = () => {
             </Card>
 
             {/* Modal Tambah/Edit */}
-            <Modal show={show} onHide={() => setShow(false)}>
+            <Modal show={show} onHide={() => setShow(false)} backdropClassName="modal-backdrop-custom" style={{ fontSize: "14px", zIndex: 2000 }}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
                         <Modal.Title>{editId ? "Edit" : "Tambah"} Layanan</Modal.Title>

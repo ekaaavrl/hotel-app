@@ -1,12 +1,23 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import TopNavbar from "./Navbar";
-
 function Layout({ children }) {
     return (
         <>
             {/* Navbar tetap di atas */}
-            <TopNavbar />
+            <div
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "56px",
+                    zIndex: 1100,
+                    backgroundColor: "#343a40", // atau warna navbar kamu
+                }}
+            >
+                <TopNavbar />
+            </div>
 
             {/* Sidebar tetap di kiri */}
             <div

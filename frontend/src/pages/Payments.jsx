@@ -103,7 +103,7 @@ const Payments = () => {
             </Card>
 
             {/* Modal Form */}
-            <Modal show={show} onHide={() => setShow(false)} style={{ fontSize: "14px" }}>
+            <Modal show={show} onHide={() => setShow(false)} backdropClassName="modal-backdrop-custom" style={{ fontSize: "14px", zIndex: 2000 }}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
                         <Modal.Title>Tambah Pembayaran</Modal.Title>
