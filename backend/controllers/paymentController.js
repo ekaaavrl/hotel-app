@@ -18,6 +18,15 @@ exports.create = async (req, res) => {
     }
 };
 
+exports.update = async (req, res) => {
+    try {
+        await Payment.updatePayment(req.params.id, req.body);
+        res.json({ message: "Pembayaran berhasil diupdate" });
+    } catch (err) {
+        res.status(500).json({ message: "Gagal update pembayaran" });
+    }
+};
+
 exports.remove = async (req, res) => {
     try {
         await Payment.deletePayment(req.params.id);
