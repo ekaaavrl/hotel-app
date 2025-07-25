@@ -35,3 +35,17 @@ exports.remove = async (req, res) => {
         res.status(500).json({ message: "Gagal hapus layanan", error: err.message });
     }
 };
+
+exports.getNotesByReservationId = async (req, res) => {
+    const { reservation_id } = req.query;
+    if (!reservation_id) {
+        return res.status(400).json({ message: "reservation_id diperlukan" });
+    }
+
+    try {
+        const notes = await Service.getServiceDescriptions(reservation_id);
+        res.json({ notes });
+    } catch (err) {
+        res.status(500).json({ message: "Gagal ambil catatan layanan", error: err.message });
+    }
+};

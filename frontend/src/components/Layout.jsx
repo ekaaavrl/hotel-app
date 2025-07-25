@@ -45,7 +45,7 @@ function Layout({ children }) {
                     padding: "24px",
                     minHeight: "calc(100vh - 56px)",
                     backgroundColor: "#f8f9fa",
-                    overflowX: "auto",
+                    overflowX: "hidden",
                 }}
             >
                 {children}

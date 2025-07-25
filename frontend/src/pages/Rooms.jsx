@@ -16,11 +16,16 @@ const Rooms = () => {
     });
     const [editingId, setEditingId] = useState(null);
     const [statusFilter, setStatusFilter] = useState("all");
+    const [activeTypeTab, setActiveTypeTab] = useState("all");
 
-    // pagination dan search
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        fetchRooms();
+        fetchRoomTypes();
+    }, []);
 
     const fetchRooms = async () => {
         const res = await api.get("/rooms");
@@ -31,11 +36,6 @@ const Rooms = () => {
         const res = await api.get("/room-types");
         setRoomTypes(res.data);
     };
-
-    useEffect(() => {
-        fetchRooms();
-        fetchRoomTypes();
-    }, []);
 
     const handleShow = (data = null) => {
         setEditingId(data?.room_id || null);
@@ -74,16 +74,17 @@ const Rooms = () => {
         return "dark";
     };
 
-    // filter status & search
     const filteredRooms = rooms
-        .filter((room) =>
-            statusFilter === "all" ? true : room.status === statusFilter
-        )
+        .filter((room) => statusFilter === "all" || room.status === statusFilter)
         .filter((room) =>
             room.room_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
             room.type_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             room.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        )
+        .filter((room) =>
+            activeTypeTab === "all" ? true : room.type_name === activeTypeTab
+        )
+        .sort((a, b) => parseInt(a.room_number) - parseInt(b.room_number));
 
     const totalPages = Math.ceil(filteredRooms.length / itemsPerPage);
     const displayedRooms = filteredRooms.slice(
@@ -101,24 +102,9 @@ const Rooms = () => {
                     </Button>
                 </Card.Header>
                 <Card.Body>
-                    <Row className="mb-2">
-                        <Col md={3}>
-                            <Form.Label>Show entries</Form.Label>
-                            <Form.Select
-                                size="sm"
-                                value={itemsPerPage}
-                                onChange={(e) => {
-                                    setItemsPerPage(Number(e.target.value));
-                                    setCurrentPage(1);
-                                }}
-                            >
-                                <option value={10}>10</option>
-                                <option value={25}>25</option>
-                                <option value={50}>50</option>
-                                <option value={100}>100</option>
-                            </Form.Select>
-                        </Col>
-                        <Col md={3}>
+                    {/* Filter & Search */}
+                    <Row className="mb-3">
+                        <Col md={4}>
                             <Form.Label>Status</Form.Label>
                             <Form.Select
                                 size="sm"
@@ -134,7 +120,7 @@ const Rooms = () => {
                                 <option value="maintenance">Maintenance</option>
                             </Form.Select>
                         </Col>
-                        <Col md={{ span: 4, offset: 2 }}>
+                        <Col md={{ span: 4, offset: 4 }}>
                             <Form.Label>Cari</Form.Label>
                             <Form.Control
                                 size="sm"
@@ -149,14 +135,42 @@ const Rooms = () => {
                         </Col>
                     </Row>
 
+                    {/* Tabs by room type */}
+                    <ul className="nav nav-tabs mb-3 custom-tabs">
+                        <li className="nav-item">
+                            <button
+                                className={`nav-link ${activeTypeTab === "all" ? "active" : ""}`}
+                                onClick={() => {
+                                    setActiveTypeTab("all");
+                                    setCurrentPage(1);
+                                }}
+                            >
+                                Semua
+                            </button>
+                        </li>
+                        {roomTypes.map((type) => (
+                            <li className="nav-item" key={type.room_type_id}>
+                                <button
+                                    className={`nav-link ${activeTypeTab === type.type_name ? "active" : ""}`}
+                                    onClick={() => {
+                                        setActiveTypeTab(type.type_name);
+                                        setCurrentPage(1);
+                                    }}
+                                >
+                                    {type.type_name}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+
                     <div className="table-responsive">
-                        <Table bordered hover className="table" style={{ fontSize: "13px" }}>
-                            <thead className="thead-light">
+                        <Table bordered hover size="sm" style={{ fontSize: "13px" }}>
+                            <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>No Kamar</th>
                                     <th>Tipe</th>
-                                    <th>Harga/Malam</th>
+                                    <th>Harga</th>
                                     <th>Status</th>
                                     <th>Deskripsi</th>
                                     <th>Aksi</th>
@@ -170,7 +184,7 @@ const Rooms = () => {
                                         <td>{room.type_name}</td>
                                         <td>Rp{parseInt(room.price_per_night).toLocaleString("id-ID")}</td>
                                         <td>
-                                            <span className={`badge bg-${getStatusBadge(room.status)} text-white`}>
+                                            <span className={`badge bg-${getStatusBadge(room.status)}`}>
                                                 {room.status}
                                             </span>
                                         </td>
@@ -196,8 +210,8 @@ const Rooms = () => {
                                 ))}
                                 {displayedRooms.length === 0 && (
                                     <tr>
-                                        <td colSpan="7" className="text-center">
-                                            Tidak ada data ditemukan.
+                                        <td colSpan="7" className="text-center text-muted">
+                                            Tidak ada data.
                                         </td>
                                     </tr>
                                 )}
@@ -205,29 +219,48 @@ const Rooms = () => {
                         </Table>
                     </div>
 
-                    <div className="d-flex justify-content-between align-items-center mt-3">
-                        <span style={{ fontSize: "13px" }}>
-                            Menampilkan {displayedRooms.length} dari {filteredRooms.length} data
-                        </span>
-                        <div>
+                    {/* Bawah: dropdown + info + pagination */}
+                    <div className="d-flex justify-content-between align-items-center mt-2 px-1 flex-wrap gap-2">
+                        <div className="d-flex align-items-center gap-2">
+                            <span>Show</span>
+                            <Form.Select
+                                size="sm"
+                                value={itemsPerPage}
+                                onChange={(e) => {
+                                    setItemsPerPage(Number(e.target.value));
+                                    setCurrentPage(1);
+                                }}
+                                style={{ width: "80px" }}
+                            >
+                                <option value={10}>10</option>
+                                <option value={25}>25</option>
+                                <option value={50}>50</option>
+                                <option value={100}>100</option>
+                            </Form.Select>
+                            <span>entries</span>
+                        </div>
+
+                        <small className="text-muted">
+                            Menampilkan {displayedRooms.length} dari {filteredRooms.length} entri
+                        </small>
+
+                        <div className="d-flex align-items-center gap-2">
                             <Button
                                 size="sm"
                                 variant="outline-secondary"
                                 disabled={currentPage === 1}
                                 onClick={() => setCurrentPage(currentPage - 1)}
-                                className="me-2"
                             >
                                 Prev
                             </Button>
-                            <span style={{ fontSize: "13px" }}>
+                            <small>
                                 Halaman {currentPage} / {totalPages || 1}
-                            </span>
+                            </small>
                             <Button
                                 size="sm"
                                 variant="outline-secondary"
                                 disabled={currentPage === totalPages || totalPages === 0}
                                 onClick={() => setCurrentPage(currentPage + 1)}
-                                className="ms-2"
                             >
                                 Next
                             </Button>

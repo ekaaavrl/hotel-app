@@ -3,8 +3,6 @@ import api from "../services/api";
 import {
     Table,
     Form,
-    Row,
-    Col,
     Button,
     Modal,
     Card
@@ -18,21 +16,55 @@ const Payments = () => {
         reservation_id: "",
         amount_paid: "",
         payment_method: "cash",
-        notes: "",
+        notes: "", // ← satu-satunya kolom keterangan pembayaran
     });
+
     const [show, setShow] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState(null);
     const [additionalFee, setAdditionalFee] = useState(0);
+    const [serviceNotes, setServiceNotes] = useState("");
     const [editId, setEditId] = useState(null);
 
     const fetchPayments = async () => {
-        const res = await api.get("/payments");
+        const res = await api.get("/payments/with-services");
         setPayments(res.data);
     };
 
     const fetchReservations = async () => {
         const res = await api.get("/reservations");
         setReservations(res.data);
+    };
+
+    const fetchAdditionalFee = async (reservationId) => {
+        try {
+            const res = await api.get(`/services?reservation_id=${reservationId}`);
+            if (!Array.isArray(res.data)) {
+                console.error("Respon bukan array:", res.data);
+                setAdditionalFee(0);
+                return;
+            }
+            const completed = res.data.filter(item => item.status === 'completed');
+            const totalFee = completed.reduce((sum, item) => sum + (item.fee || 0), 0);
+            setAdditionalFee(totalFee);
+        } catch (err) {
+            console.error("Gagal mengambil layanan kamar:", err);
+            setAdditionalFee(0);
+        }
+    };
+
+    const fetchServiceDescriptions = async (reservationId) => {
+        try {
+            const res = await api.get(`/services/notes?reservation_id=${reservationId}`);
+            if (!res.data || typeof res.data.notes !== "string") {
+                console.error("Format data salah:", res.data);
+                setServiceNotes("");
+                return;
+            }
+            setServiceNotes(res.data.notes);
+        } catch (err) {
+            console.error("Gagal ambil catatan layanan:", err);
+            setServiceNotes("");
+        }
     };
 
     useEffect(() => {
@@ -42,11 +74,12 @@ const Payments = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const payload = {
-            ...form,
+            reservation_id: form.reservation_id,
             amount_paid: parseInt(form.amount_paid) || 0,
+            payment_method: form.payment_method,
             additional_fee: parseInt(additionalFee) || 0,
+            notes: form.notes || "", // ← WAJIB ADA ini, untuk isi kolom notes!
         };
 
         if (editId) {
@@ -60,7 +93,8 @@ const Payments = () => {
         resetForm();
     };
 
-    const handleEdit = (payment) => {
+
+    const handleEdit = async (payment) => {
         const reservation = reservations.find(r => r.reservation_id === payment.reservation_id);
         setForm({
             reservation_id: payment.reservation_id,
@@ -68,9 +102,12 @@ const Payments = () => {
             payment_method: payment.payment_method,
             notes: payment.notes || "",
         });
+
+
         setSelectedReservation(reservation || null);
-        setAdditionalFee(payment.additional_fee || 0);
         setEditId(payment.payment_id);
+        await fetchAdditionalFee(payment.reservation_id);
+        await fetchServiceDescriptions(payment.reservation_id);
         setShow(true);
     };
 
@@ -87,11 +124,14 @@ const Payments = () => {
             amount_paid: "",
             payment_method: "cash",
             notes: "",
+            payment_description: "", // ← Reset juga
         });
         setAdditionalFee(0);
+        setServiceNotes("");
         setSelectedReservation(null);
         setEditId(null);
     };
+
 
     return (
         <div className="container-fluid py-4">
@@ -122,8 +162,7 @@ const Payments = () => {
                                 {payments.map((item, i) => {
                                     const relatedReservation = reservations.find(r => r.reservation_id === item.reservation_id);
                                     const totalPrice = relatedReservation ? parseInt(relatedReservation.total_price || 0) : 0;
-                                    const sisaTagihan = totalPrice - parseInt(item.amount_paid || 0);
-
+                                    const sisaTagihan = totalPrice + parseInt(item.service_fee || 0) - parseInt(item.amount_paid || 0);
                                     return (
                                         <tr key={item.payment_id}>
                                             <td>{i + 1}</td>
@@ -132,24 +171,15 @@ const Payments = () => {
                                                 Rp{sisaTagihan.toLocaleString("id-ID")}
                                             </td>
                                             <td>Rp{parseInt(item.amount_paid).toLocaleString("id-ID")}</td>
-                                            <td>Rp{parseInt(item.additional_fee || 0).toLocaleString("id-ID")}</td> {/* Ini kolom baru */}
+                                            <td>Rp{parseInt(item.service_fee || 0).toLocaleString("id-ID")}</td>
                                             <td>{item.payment_method}</td>
                                             <td>{item.notes}</td>
                                             <td>{new Date(item.payment_date).toLocaleDateString("id-ID")}</td>
                                             <td>
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline-primary"
-                                                    className="me-2"
-                                                    onClick={() => handleEdit(item)}
-                                                >
+                                                <Button size="sm" variant="outline-primary" className="me-2" onClick={() => handleEdit(item)}>
                                                     <FaEdit />
                                                 </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline-danger"
-                                                    onClick={() => handleDelete(item.payment_id)}
-                                                >
+                                                <Button size="sm" variant="outline-danger" onClick={() => handleDelete(item.payment_id)}>
                                                     <FaTrash />
                                                 </Button>
                                             </td>
@@ -162,7 +192,6 @@ const Payments = () => {
                 </Card.Body>
             </Card>
 
-            {/* Modal Form */}
             <Modal show={show} onHide={() => { setShow(false); resetForm(); }} backdropClassName="modal-backdrop-custom" style={{ fontSize: "14px", zIndex: 2000 }}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
@@ -178,6 +207,10 @@ const Payments = () => {
                                     const selected = reservations.find(r => r.reservation_id == selectedId);
                                     setForm({ ...form, reservation_id: selectedId });
                                     setSelectedReservation(selected || null);
+                                    if (selectedId) {
+                                        fetchAdditionalFee(selectedId);
+                                        fetchServiceDescriptions(selectedId);
+                                    }
                                 }}
                                 required
                             >
@@ -201,13 +234,8 @@ const Payments = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-2">
-                            <Form.Label>Biaya Tambahan (opsional)</Form.Label>
-                            <Form.Control
-                                type="number"
-                                value={additionalFee}
-                                onChange={(e) => setAdditionalFee(e.target.value)}
-                                placeholder="Isi jika ada layanan tambahan"
-                            />
+                            <Form.Label>Biaya Tambahan (otomatis)</Form.Label>
+                            <Form.Control type="number" value={additionalFee} disabled />
                         </Form.Group>
 
                         {selectedReservation && (
@@ -223,9 +251,20 @@ const Payments = () => {
                                     (parseInt(selectedReservation.total_price || 0) + parseInt(additionalFee || 0)) -
                                     parseInt(form.amount_paid || 0)
                                 ).toLocaleString("id-ID")}</p>
+
+                                {serviceNotes && (
+                                    <div className="mt-2">
+                                        <p className="mb-1 fw-bold">Catatan Layanan:</p>
+                                        <ul className="mb-1" style={{ paddingLeft: "16px" }}>
+                                            {serviceNotes.split("\n").map((line, idx) => (
+                                                <li key={idx}>{line.replace(/^•\s?/, "")}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
                             </div>
                         )}
-
                         <Form.Group className="mb-2 mt-3">
                             <Form.Label>Metode Pembayaran</Form.Label>
                             <Form.Select
@@ -239,16 +278,17 @@ const Payments = () => {
                                 <option value="transfer">Transfer</option>
                             </Form.Select>
                         </Form.Group>
-
-                        <Form.Group className="mb-2">
-                            <Form.Label>Catatan</Form.Label>
+                        <Form.Group className="mb-2 mt-3">
+                            <Form.Label>Keterangan Pembayaran</Form.Label>
                             <Form.Control
                                 as="textarea"
                                 rows={2}
+                                placeholder="Contoh: DP, Pelunasan, Uang Jaminan"
                                 value={form.notes}
                                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
                             />
                         </Form.Group>
+
                     </Modal.Body>
 
                     <Modal.Footer>

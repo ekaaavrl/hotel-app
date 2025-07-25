@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import SummaryCardsGroup from "../components/SummaryCardsGroup";
 import SummaryChart from "../components/SummaryChart";
 import ReservationChart from "../components/ReservationChart";
 import { Row, Col } from "react-bootstrap";
 
-
 const Dashboard = () => {
+    const navigate = useNavigate();
+
     const [stats, setStats] = useState({
         guestsToday: 0,
         roomsAvailable: 0,
@@ -15,9 +17,16 @@ const Dashboard = () => {
     });
 
     const [chartData, setChartData] = useState([]);
-    const [reservationChart, setReservationChart] = useState([]); // ✅ tambahkan ini
+    const [reservationChart, setReservationChart] = useState([]);
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
         const fetchData = async () => {
             try {
                 const statsRes = await api.get("/dashboard");
@@ -34,7 +43,7 @@ const Dashboard = () => {
         };
 
         fetchData();
-    }, []);
+    }, [navigate]);
 
     return (
         <div className="p-4">
@@ -48,7 +57,6 @@ const Dashboard = () => {
                     <ReservationChart data={reservationChart} />
                 </Col>
             </Row>
-
         </div>
     );
 };

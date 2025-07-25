@@ -128,6 +128,7 @@ const RoomServices = () => {
                                     <th>Tamu</th>
                                     <th>Reservasi ID</th>
                                     <th>Layanan</th>
+                                    <th>Biaya</th> {/* Tambahan */}
                                     <th>Waktu Permintaan</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -140,6 +141,7 @@ const RoomServices = () => {
                                         <td>{s.full_name || "-"}</td>
                                         <td>{s.reservation_id}</td>
                                         <td>{s.service_description}</td>
+                                        <td>Rp{parseInt(s.fee || 0).toLocaleString("id-ID")}</td> {/* Tambahan */}
                                         <td>{new Date(s.request_time).toLocaleString("id-ID")}</td>
                                         <td>
                                             <span className={`badge text-bg-${s.status === "pending"
@@ -170,6 +172,7 @@ const RoomServices = () => {
                                         </td>
                                     </tr>
                                 ))}
+
                                 {displayed.length === 0 && (
                                     <tr>
                                         <td colSpan="7" className="text-center text-muted">
@@ -231,7 +234,7 @@ const RoomServices = () => {
                                 <option value="">-- Pilih Reservasi --</option>
                                 {reservations.map((r) => (
                                     <option key={r.reservation_id} value={r.reservation_id}>
-                                        #{r.reservation_id} - {r.guest_name}
+                                        Tamu {r.reservation_id} - {r.guest_name}
                                     </option>
                                 ))}
                             </Form.Select>
@@ -249,7 +252,18 @@ const RoomServices = () => {
                                 required
                             />
                         </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label>Biaya Layanan</Form.Label>
+                            <Form.Control
+                                type="number"
+                                value={form.fee || 0}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setForm({ ...form, fee: value === "" ? "" : parseInt(value) });
+                                }}
 
+                            />
+                        </Form.Group>
                         <Form.Group className="mb-2">
                             <Form.Label>Status</Form.Label>
                             <Form.Select

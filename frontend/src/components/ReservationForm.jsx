@@ -166,7 +166,7 @@ const ReservationForm = () => {
                 </Card.Header>
 
                 <Card.Body>
-                    <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3">
+                    <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3 custom-tabs">
                         <Tab eventKey="form" title={editId ? "Edit Reservasi" : "Form Reservasi"}>
                             {error && <Alert variant="danger">{error}</Alert>}
                             <Form onSubmit={handleSubmit}>
@@ -306,10 +306,11 @@ const ReservationForm = () => {
                             </Form>
                         </Tab>
 
-                        <Tab eventKey="list" title="Daftar Reservasi">
+                        <Tab eventKey="list" title={`Daftar Reservasi`}>
                             <Table striped bordered hover responsive style={{ fontSize: '12px' }}>
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Tamu</th>
                                         <th>Kamar</th>
                                         <th>Tgl Check-in</th>
@@ -320,8 +321,9 @@ const ReservationForm = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {reservations.map((r) => (
+                                    {reservations.map((r, i) => (
                                         <tr key={r.reservation_id}>
+                                            <td>{i + 1}</td>
                                             <td>{guests.find(g => g.guest_id === r.guest_id)?.full_name || r.guest_id}</td>
                                             <td>{rooms.find(ro => ro.room_id === r.room_id)?.room_number || r.room_id}</td>
                                             <td>{r.check_in_date?.slice(0, 10)}</td>
@@ -350,6 +352,7 @@ const ReservationForm = () => {
                                 </tbody>
                             </Table>
                         </Tab>
+
                     </Tabs>
                 </Card.Body>
             </Card>
