@@ -77,7 +77,6 @@ const ReservationForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const token = localStorage.getItem("token");
             const headers = { headers: { Authorization: `Bearer ${token}` } };
@@ -92,17 +91,14 @@ const ReservationForm = () => {
                 total_price: totalPrice,
             };
 
-            let response;
             if (editId) {
-                response = await api.put(`/reservations/${editId}`, payload, headers);
+                await api.put(`/reservations/${editId}`, payload, headers);
+                setAlert({ show: true, message: "Reservasi berhasil diupdate", variant: "success" });
             } else {
-                response = await api.post("/reservations", payload, headers);
-                const newReservationId = response.data?.reservation_id;
-                if (!newReservationId) throw new Error("Gagal mendapatkan reservation_id");
-                console.log("Reservasi berhasil ditambahkan dengan ID:", newReservationId);
+                await api.post("/reservations", payload, headers);
+                setAlert({ show: true, message: "Reservasi berhasil disimpan", variant: "success" });
             }
 
-            setAlert({ show: true, message: "Reservasi berhasil disimpan", variant: "success" });
             setTimeout(() => {
                 setAlert({ show: false, message: "", variant: "success" });
             }, 3000);

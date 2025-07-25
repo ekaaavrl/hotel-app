@@ -1,3 +1,4 @@
+// Bagian atas tetap (import, useState, useEffect, dll)
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import {
@@ -8,7 +9,6 @@ import {
     Card
 } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
-
 const Payments = () => {
     const [payments, setPayments] = useState([]);
     const [reservations, setReservations] = useState([]);
@@ -18,15 +18,14 @@ const Payments = () => {
         payment_method: "cash",
         notes: "",
     });
-
     const [show, setShow] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState(null);
     const [additionalFee, setAdditionalFee] = useState(0);
-    const [serviceNotes, setServiceNotes] = useState("");
+    const [serviceDescriptions, setServiceDescriptions] = useState("");
     const [editId, setEditId] = useState(null);
 
     const fetchPayments = async () => {
-        const res = await api.get("/payments/with-services");
+        const res = await api.get("/payments");
         setPayments(res.data);
     };
 
@@ -37,12 +36,7 @@ const Payments = () => {
 
     const fetchAdditionalFee = async (reservationId) => {
         try {
-            const res = await api.get(`/services?reservation_id=${reservationId}`);
-            if (!Array.isArray(res.data)) {
-                console.error("Respon bukan array:", res.data);
-                setAdditionalFee(0);
-                return;
-            }
+            const res = await api.get(`/room-services?reservation_id=${reservationId}`);
             const completed = res.data.filter(item => item.status === 'completed');
             const totalFee = completed.reduce((sum, item) => sum + (item.fee || 0), 0);
             setAdditionalFee(totalFee);
@@ -55,15 +49,15 @@ const Payments = () => {
     const fetchServiceDescriptions = async (reservationId) => {
         try {
             const res = await api.get(`/services/notes?reservation_id=${reservationId}`);
-            if (!res.data || typeof res.data.notes !== "string") {
-                console.error("Format data salah:", res.data);
-                setServiceNotes("");
-                return;
+            console.log("Catatan layanan:", res.data);
+            if (res.data && typeof res.data.notes === "string") {
+                setServiceDescriptions(res.data.notes);
+            } else {
+                setServiceDescriptions("");
             }
-            setServiceNotes(res.data.notes);
         } catch (err) {
             console.error("Gagal ambil catatan layanan:", err);
-            setServiceNotes("");
+            setServiceDescriptions("");
         }
     };
 
@@ -74,6 +68,7 @@ const Payments = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const payload = {
             reservation_id: form.reservation_id,
             amount_paid: parseInt(form.amount_paid) || 0,
@@ -93,7 +88,6 @@ const Payments = () => {
         resetForm();
     };
 
-
     const handleEdit = async (payment) => {
         const reservation = reservations.find(r => r.reservation_id === payment.reservation_id);
         setForm({
@@ -102,14 +96,24 @@ const Payments = () => {
             payment_method: payment.payment_method,
             notes: payment.notes || "",
         });
-
-
-        setSelectedReservation(reservation || null);
+        setSelectedReservation({
+            ...reservation,
+            total_price: reservation?.total_price || payment.total_price || 0 // fallback
+        });
+        setAdditionalFee(payment.additional_fee || 0);
         setEditId(payment.payment_id);
-        await fetchAdditionalFee(payment.reservation_id);
-        await fetchServiceDescriptions(payment.reservation_id);
+
+        try {
+            const res = await api.get(`/services/notes?reservation_id=${payment.reservation_id}`);
+            setServiceDescriptions(res.data?.notes || "");
+        } catch (err) {
+            console.error("Gagal ambil catatan layanan:", err);
+            setServiceDescriptions("");
+        }
+
         setShow(true);
     };
+
 
     const handleDelete = async (id) => {
         if (window.confirm("Yakin ingin menghapus pembayaran ini?")) {
@@ -124,23 +128,19 @@ const Payments = () => {
             amount_paid: "",
             payment_method: "cash",
             notes: "",
-            payment_description: "",
         });
         setAdditionalFee(0);
-        setServiceNotes("");
         setSelectedReservation(null);
         setEditId(null);
+        setServiceDescriptions("");
     };
-
 
     return (
         <div className="container-fluid py-4">
             <Card className="shadow mb-4">
                 <Card.Header className="py-3 d-flex justify-content-between align-items-center">
                     <h5 className="m-0 fw-bold text-dark">Data Pembayaran</h5>
-                    <Button variant="primary" size="sm" onClick={() => setShow(true)}>
-                        + Tambah
-                    </Button>
+                    <Button variant="primary" size="sm" onClick={() => setShow(true)}>+ Tambah</Button>
                 </Card.Header>
                 <Card.Body>
                     <div className="table-responsive">
@@ -162,7 +162,8 @@ const Payments = () => {
                                 {payments.map((item, i) => {
                                     const relatedReservation = reservations.find(r => r.reservation_id === item.reservation_id);
                                     const totalPrice = relatedReservation ? parseInt(relatedReservation.total_price || 0) : 0;
-                                    const sisaTagihan = totalPrice + parseInt(item.service_fee || 0) - parseInt(item.amount_paid || 0);
+                                    const sisaTagihan = totalPrice + parseInt(item.additional_fee || 0) - parseInt(item.amount_paid || 0);
+
                                     return (
                                         <tr key={item.payment_id}>
                                             <td>{i + 1}</td>
@@ -171,7 +172,7 @@ const Payments = () => {
                                                 Rp{sisaTagihan.toLocaleString("id-ID")}
                                             </td>
                                             <td>Rp{parseInt(item.amount_paid).toLocaleString("id-ID")}</td>
-                                            <td>Rp{parseInt(item.service_fee || 0).toLocaleString("id-ID")}</td>
+                                            <td>Rp{parseInt(item.additional_fee || 0).toLocaleString("id-ID")}</td>
                                             <td>{item.payment_method}</td>
                                             <td>{item.notes}</td>
                                             <td>{new Date(item.payment_date).toLocaleDateString("id-ID")}</td>
@@ -192,6 +193,7 @@ const Payments = () => {
                 </Card.Body>
             </Card>
 
+            {/* Modal Form */}
             <Modal show={show} onHide={() => { setShow(false); resetForm(); }} backdropClassName="modal-backdrop-custom" style={{ fontSize: "14px", zIndex: 2000 }}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
@@ -202,14 +204,15 @@ const Payments = () => {
                             <Form.Label>Reservasi</Form.Label>
                             <Form.Select
                                 value={form.reservation_id}
-                                onChange={(e) => {
+                                onChange={async (e) => {
                                     const selectedId = e.target.value;
                                     const selected = reservations.find(r => r.reservation_id == selectedId);
                                     setForm({ ...form, reservation_id: selectedId });
                                     setSelectedReservation(selected || null);
+
                                     if (selectedId) {
-                                        fetchAdditionalFee(selectedId);
-                                        fetchServiceDescriptions(selectedId);
+                                        await fetchAdditionalFee(selectedId);
+                                        await fetchServiceDescriptions(selectedId);
                                     }
                                 }}
                                 required
@@ -244,27 +247,28 @@ const Payments = () => {
                                 <p className="mb-1">Total Harga Reservasi: Rp{parseInt(selectedReservation.total_price || 0).toLocaleString("id-ID")}</p>
                                 <p className="mb-1">Biaya Tambahan: Rp{parseInt(additionalFee || 0).toLocaleString("id-ID")}</p>
                                 <p className="mb-1 text-danger fw-bold">Total Tagihan: Rp{(
-                                    parseInt(selectedReservation.total_price || 0) +
-                                    parseInt(additionalFee || 0)
+                                    parseInt(selectedReservation.total_price || 0) + parseInt(additionalFee || 0)
                                 ).toLocaleString("id-ID")}</p>
                                 <p className="mb-1 text-primary fw-bold">Sisa Tagihan: Rp{(
                                     (parseInt(selectedReservation.total_price || 0) + parseInt(additionalFee || 0)) -
                                     parseInt(form.amount_paid || 0)
                                 ).toLocaleString("id-ID")}</p>
 
-                                {serviceNotes && (
+                                {serviceDescriptions ? (
                                     <div className="mt-2">
                                         <p className="mb-1 fw-bold">Catatan Layanan:</p>
                                         <ul className="mb-1" style={{ paddingLeft: "16px" }}>
-                                            {serviceNotes.split("\n").map((line, idx) => (
+                                            {serviceDescriptions.split("\n").map((line, idx) => (
                                                 <li key={idx}>{line.replace(/^•\s?/, "")}</li>
                                             ))}
                                         </ul>
                                     </div>
+                                ) : (
+                                    <p className="text-muted mt-2 fst-italic">Tidak ada catatan layanan.</p>
                                 )}
-
                             </div>
                         )}
+
                         <Form.Group className="mb-2 mt-3">
                             <Form.Label>Metode Pembayaran</Form.Label>
                             <Form.Select
@@ -278,26 +282,24 @@ const Payments = () => {
                                 <option value="transfer">Transfer</option>
                             </Form.Select>
                         </Form.Group>
-                        <Form.Group className="mb-2 mt-3">
-                            <Form.Label>Keterangan Pembayaran</Form.Label>
+
+                        <Form.Group className="mb-2">
+                            <Form.Label>Catatan</Form.Label>
                             <Form.Control
                                 as="textarea"
                                 rows={2}
-                                placeholder="Contoh: DP, Pelunasan, Uang Jaminan"
+                                placeholder="Opsional, misalnya catatan pembayaran"
                                 value={form.notes}
                                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
                             />
                         </Form.Group>
-
                     </Modal.Body>
 
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => { setShow(false); resetForm(); }}>
                             Batal
                         </Button>
-                        <Button type="submit" variant="success">
-                            Simpan
-                        </Button>
+                        <Button type="submit" variant="success">Simpan</Button>
                     </Modal.Footer>
                 </Form>
             </Modal>
