@@ -16,7 +16,7 @@ const Payments = () => {
         reservation_id: "",
         amount_paid: "",
         payment_method: "cash",
-        notes: "", // ← satu-satunya kolom keterangan pembayaran
+        notes: "",
     });
 
     const [show, setShow] = useState(false);
@@ -79,7 +79,7 @@ const Payments = () => {
             amount_paid: parseInt(form.amount_paid) || 0,
             payment_method: form.payment_method,
             additional_fee: parseInt(additionalFee) || 0,
-            notes: form.notes || "", // ← WAJIB ADA ini, untuk isi kolom notes!
+            notes: form.notes || "",
         };
 
         if (editId) {
@@ -124,7 +124,7 @@ const Payments = () => {
             amount_paid: "",
             payment_method: "cash",
             notes: "",
-            payment_description: "", // ← Reset juga
+            payment_description: "",
         });
         setAdditionalFee(0);
         setServiceNotes("");

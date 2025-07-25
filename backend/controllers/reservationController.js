@@ -7,6 +7,7 @@ const countDays = (start, end) => {
 };
 
 // Buat reservasi
+// 📥 Buat reservasi & otomatis simpan ke payment
 exports.createReservation = async (req, res) => {
     const {
         guest_id,
@@ -18,15 +19,52 @@ exports.createReservation = async (req, res) => {
         total_price,
     } = req.body;
 
-    await db.query(
-        `INSERT INTO reservations 
-        (guest_id, room_id, check_in_date, check_out_date, number_of_guests, status, total_price) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [guest_id, room_id, check_in_date, check_out_date, number_of_guests, status, total_price]
-    );
+    const conn = await db.getConnection(); // Ambil koneksi pool
 
-    res.status(201).json({ message: "Reservasi berhasil disimpan" });
+    try {
+        await conn.beginTransaction();
+
+        // Simpan ke tabel reservations
+        const [reservationResult] = await conn.query(
+            `INSERT INTO reservations 
+             (guest_id, room_id, check_in_date, check_out_date, number_of_guests, status, total_price) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [guest_id, room_id, check_in_date, check_out_date, number_of_guests, status, total_price]
+        );
+
+        const reservation_id = reservationResult.insertId;
+
+        // Simpan ke tabel payments
+        await conn.query(
+            `INSERT INTO payments (reservation_id, amount_paid, payment_method, additional_fee, notes) 
+             VALUES (?, ?, ?, ?, ?)`,
+            [
+                reservation_id,
+                0,                    // default unpaid
+                "cash",               // default metode
+                0,                    // default fee
+                "Auto generated from reservation"
+            ]
+        );
+
+        await conn.commit();
+
+        // ✅ Response saat sukses
+        res.status(201).json({
+            message: "Reservasi dan pembayaran berhasil disimpan",
+            reservation_id: reservation_id
+        });
+
+    } catch (err) {
+        await conn.rollback(); // rollback jika error
+        console.error("Gagal simpan reservasi & pembayaran:", err);
+        res.status(500).json({ message: "Gagal menyimpan reservasi dan pembayaran" });
+    } finally {
+        conn.release(); // wajib dikembalikan ke pool
+    }
 };
+
+
 
 // Update reservasi
 exports.updateReservation = async (req, res) => {
