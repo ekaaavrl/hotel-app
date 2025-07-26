@@ -144,3 +144,44 @@ body {
   width: 100%;
   max-width: 100vw;
 }
+
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+  }
+
+  * {
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  .modal,
+  .modal-dialog,
+  .modal-content {
+    all: unset;
+  }
+
+  .modal-body {
+    padding: 0 !important;
+  }
+
+  .invoice-print {
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 12px;
+    color: #000;
+  }
+
+  .btn,
+  .modal-footer,
+  .modal-header,
+  .navbar,
+  .sidebar,
+  .btn-close {
+    display: none !important;
+  }
+}

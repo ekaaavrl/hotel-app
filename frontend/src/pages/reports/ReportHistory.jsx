@@ -84,7 +84,7 @@ const ReportHistory = () => {
                         <Table striped bordered hover size="sm" style={{ fontSize: "13px" }}>
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>ID Reservasi</th>
                                     <th>Nama Tamu</th>
                                     <th>Metode</th>

@@ -133,7 +133,7 @@ const GuestManagement = () => {
                     <Table striped bordered hover style={{ fontSize: "13px" }}>
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>No</th>
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>No HP</th>

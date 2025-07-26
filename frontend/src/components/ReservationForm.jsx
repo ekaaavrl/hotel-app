@@ -220,7 +220,7 @@ const ReservationForm = () => {
                                     <Col md={6}>
                                         <Form.Label>Check-in</Form.Label>
                                         <Form.Control
-                                            type="date"
+                                            type="datetime-local"
                                             value={form.check_in_date}
                                             onChange={(e) => setForm({ ...form, check_in_date: e.target.value })}
                                             required
@@ -229,7 +229,7 @@ const ReservationForm = () => {
                                     <Col md={6}>
                                         <Form.Label>Check-out</Form.Label>
                                         <Form.Control
-                                            type="date"
+                                            type="datetime-local"
                                             value={form.check_out_date}
                                             onChange={(e) => setForm({ ...form, check_out_date: e.target.value })}
                                             required
@@ -311,7 +311,7 @@ const ReservationForm = () => {
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>ID Reservasi</th> {/* ✅ Tambahkan ini */}
+                                        <th>ID Reservasi</th>
                                         <th>Tamu</th>
                                         <th>Kamar</th>
                                         <th>Tgl Check-in</th>

@@ -127,11 +127,11 @@ const RoomServices = () => {
                         <Table striped bordered hover style={{ fontSize: "13px" }}>
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>Tamu</th>
                                     <th>Reservasi ID</th>
                                     <th>Layanan</th>
-                                    <th>Biaya</th> {/* Tambahan */}
+                                    <th>Biaya</th>
                                     <th>Waktu Permintaan</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -144,7 +144,7 @@ const RoomServices = () => {
                                         <td>{s.full_name || "-"}</td>
                                         <td>RSV-{s.reservation_id}</td>
                                         <td>{s.service_description}</td>
-                                        <td>Rp{parseInt(s.fee || 0).toLocaleString("id-ID")}</td> {/* Tambahan */}
+                                        <td>Rp{parseInt(s.fee || 0).toLocaleString("id-ID")}</td>
                                         <td>{new Date(s.request_time).toLocaleString("id-ID")}</td>
                                         <td>
                                             <span className={`badge text-bg-${s.status === "pending"

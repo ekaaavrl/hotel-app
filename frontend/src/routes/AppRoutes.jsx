@@ -20,6 +20,7 @@ import UserLogs from "../pages/UserLogs";
 import PrivateRoute from "../components/PrivateRoute";
 import ReservationHistory from "../components/ReservationHistory";
 import Unauthorized from "../pages/Unauthorized";
+import InvoicePage from "../pages/InvoicePage";
 
 const AppRoutes = () => (
     <Routes>
@@ -31,6 +32,16 @@ const AppRoutes = () => (
                 <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
                     <Layout>
                         <Dashboard />
+                    </Layout>
+                </PrivateRoute>
+            }
+        />
+        <Route
+            path="/invoice/:reservationId"
+            element={
+                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                    <Layout>
+                        <InvoicePage />
                     </Layout>
                 </PrivateRoute>
             }

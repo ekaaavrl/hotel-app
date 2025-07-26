@@ -52,7 +52,7 @@ const ReportReservations = () => {
                         <Table striped bordered hover size="sm" style={{ fontSize: '13px' }}>
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>Nama Tamu</th>
                                     <th>Nomor Kamar</th>
                                     <th>Check-In</th>

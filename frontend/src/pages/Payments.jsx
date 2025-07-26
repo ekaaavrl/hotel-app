@@ -8,7 +8,9 @@ import {
     Modal,
     Card
 } from "react-bootstrap";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPrint } from "react-icons/fa";
+import InvoiceHotel from "../components/InvoiceHotel";
+
 
 const Payments = () => {
     const [payments, setPayments] = useState([]);
@@ -144,6 +146,36 @@ const Payments = () => {
         setServiceDescriptions("");
     };
 
+    const [selectedInvoice, setSelectedInvoice] = useState(null);
+    const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+
+    const handlePrintInvoice = () => {
+        const printContents = document.getElementById("invoice-to-print").innerHTML;
+        const win = window.open('', '', 'height=700,width=900');
+        win.document.write(`
+      <html>
+        <head>
+          <title>Invoice</title>
+          <style>
+            body { font-family: Arial; padding: 20px; font-size: 14px; color: #000; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+            h2 { text-align: center; margin-bottom: 30px; }
+          </style>
+        </head>
+        <body>
+          ${printContents}
+        </body>
+      </html>
+    `);
+        win.document.close();
+        win.focus();
+        win.print();
+        win.close();
+    };
+
+
+
     return (
         <div className="container-fluid py-4">
             <Card className="shadow mb-4">
@@ -156,7 +188,7 @@ const Payments = () => {
                         <Table bordered hover responsive style={{ fontSize: "13px" }}>
                             <thead className="thead-light">
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>Reservasi</th>
                                     <th>Sisa Tagihan</th>
                                     <th>Jumlah Dibayar</th>
@@ -194,10 +226,40 @@ const Payments = () => {
                                                 <Button size="sm" variant="outline-primary" className="me-2" onClick={() => handleEdit(item)}>
                                                     <FaEdit />
                                                 </Button>
-                                                <Button size="sm" variant="outline-danger" onClick={() => handleDelete(item.payment_id)}>
+                                                <Button size="sm" variant="outline-danger" className="me-2" onClick={() => handleDelete(item.payment_id)}>
                                                     <FaTrash />
                                                 </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline-secondary"
+                                                    onClick={() => {
+                                                        const reservation = reservations.find(r => r.reservation_id === item.reservation_id);
+                                                        if (reservation) {
+                                                            setSelectedInvoice({
+                                                                guest_name: item.guest_name,
+                                                                room_number: reservation.room_number,
+                                                                check_in: reservation.check_in_date,
+                                                                check_out: reservation.check_out_date,
+                                                                service: [
+                                                                    {
+                                                                        name: "Room Charge",
+                                                                        qty: 1,
+                                                                        price: parseInt(reservation.total_price || 0),
+                                                                        total: parseInt(reservation.total_price || 0),
+                                                                    }
+                                                                ],
+                                                                additional_fee: item.additional_fee || 0,
+                                                                total: (parseInt(reservation.total_price || 0) + parseInt(item.additional_fee || 0)),
+                                                            });
+                                                            setShowInvoiceModal(true);
+                                                        }
+                                                    }}
+                                                >
+                                                    <FaPrint />
+                                                </Button>
+
                                             </td>
+
                                         </tr>
                                     );
                                 })}
@@ -316,6 +378,32 @@ const Payments = () => {
                     </Modal.Footer>
                 </Form>
             </Modal>
+            {/* Modal Cetak Invoice */}
+            <Modal
+                show={showInvoiceModal}
+                onHide={() => setShowInvoiceModal(false)}
+                size="lg" backdropClassName="modal-backdrop-custom" style={{ fontSize: "14px", zIndex: 2000 }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Invoice</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedInvoice ? (
+                        <InvoiceHotel invoice={selectedInvoice} />
+                    ) : (
+                        <p>Loading invoice...</p>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handlePrintInvoice}>
+                        🖨️ Cetak
+                    </Button>
+                    <Button variant="outline-danger" onClick={() => setShowInvoiceModal(false)}>
+                        Tutup
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
         </div>
     );
 };

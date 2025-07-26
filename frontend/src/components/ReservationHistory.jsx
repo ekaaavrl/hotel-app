@@ -72,7 +72,7 @@ const ReservationHistory = () => {
                         <Table striped bordered hover responsive style={{ fontSize: "13px" }}>
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>Tamu</th>
                                     <th>Kamar</th>
                                     <th>Jenis</th>

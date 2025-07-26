@@ -71,7 +71,7 @@ const RoomTypes = () => {
                         <Table bordered hover className="table" width="100%" style={{ fontSize: "13px" }}>
                             <thead className="thead-light">
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>Nama Tipe</th>
                                     <th>Harga Default</th>
                                     <th>Deskripsi</th>

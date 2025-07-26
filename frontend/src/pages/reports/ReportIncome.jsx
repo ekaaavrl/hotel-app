@@ -100,7 +100,7 @@ const ReportIncome = () => {
                         <Table striped bordered hover size="sm" style={{ fontSize: "13px" }}>
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>Tanggal</th>
                                     <th>Total Pendapatan</th>
                                 </tr>
