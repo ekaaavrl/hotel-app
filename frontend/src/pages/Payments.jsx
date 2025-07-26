@@ -102,7 +102,7 @@ const Payments = () => {
             reservation_id: payment.reservation_id,
             amount_paid: payment.amount_paid,
             payment_method: payment.payment_method,
-            notes: payment.notes || "",
+            notes: payment.notes,
             additional_fee: payment.additional_fee || 0, // ✅ penting
         });
         setSelectedReservation({
@@ -135,7 +135,7 @@ const Payments = () => {
             reservation_id: "",
             amount_paid: "",
             payment_method: "cash",
-            notes: "",
+            notes: "Belum ada catatan",
             additional_fee: 0
         });
         setAdditionalFee(0);
@@ -176,14 +176,17 @@ const Payments = () => {
                                     return (
                                         <tr key={item.payment_id}>
                                             <td>{i + 1}</td>
-                                            <td>#{item.reservation_id}</td>
+                                            <td>
+                                                <strong>RSV-{item.reservation_id}</strong><br />
+                                                <small className="text-muted">{item.guest_name}</small>
+                                            </td>
                                             <td className={`fw-bold ${sisaTagihan <= 0 ? "text-success" : "text-danger"}`}>
                                                 Rp{sisaTagihan.toLocaleString("id-ID")}
                                             </td>
                                             <td>Rp{parseInt(item.amount_paid).toLocaleString("id-ID")}</td>
                                             <td>Rp{parseInt(item.additional_fee || 0).toLocaleString("id-ID")}</td>
                                             <td>{item.payment_method}</td>
-                                            <td>{item.notes}</td>
+                                            <td>{item.notes || "Belum ada catatan"}</td>
                                             <td>{new Date(item.payment_date).toLocaleDateString("id-ID")}</td>
                                             <td>
                                                 <Button size="sm" variant="outline-primary" className="me-2" onClick={() => handleEdit(item)}>
