@@ -97,9 +97,32 @@ const getRoomReport = async (status = null) => {
     }
 };
 
+const getReservationHistory = async () => {
+    const [rows] = await db.query(`
+    SELECT 
+      r.reservation_id,
+      g.full_name AS guest_name,
+      rm.room_number,
+      rt.type_name AS room_type,
+      r.check_in_date,
+      r.check_out_date,
+      r.number_of_guests,
+      r.status,
+      r.total_price,
+      r.created_at
+    FROM reservations r
+    JOIN guests g ON r.guest_id = g.guest_id
+    JOIN rooms rm ON r.room_id = rm.room_id
+    JOIN room_types rt ON rm.room_type_id = rt.room_type_id
+    ORDER BY r.created_at DESC
+  `);
+    return rows;
+};
+
 module.exports = {
     getHistoryPayments,
     getDailyReservations,
+    getReservationHistory,
     getIncomeReport,
     getRoomReport,
 };

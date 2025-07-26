@@ -7,5 +7,6 @@ router.get("/income", auth, reportController.getIncomeReport);
 router.get("/history", auth, reportController.getHistoryPayments);
 router.get("/reservations", auth, reportController.getDailyReservations);
 router.get("/rooms", auth, reportController.getRoomReport);
+router.get("/history-reservations", auth, reportController.getReservationHistory);
 
 module.exports = router;

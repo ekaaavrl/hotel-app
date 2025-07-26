@@ -18,6 +18,7 @@ import ReportIncome from "../pages/reports/ReportIncome";
 import ReportRooms from "../pages/reports/ReportRooms";
 import UserLogs from "../pages/UserLogs";
 import PrivateRoute from "../components/PrivateRoute";
+import ReservationHistory from "../components/ReservationHistory";
 import Unauthorized from "../pages/Unauthorized";
 
 const AppRoutes = () => (
@@ -141,6 +142,16 @@ const AppRoutes = () => (
                 <PrivateRoute allowedRoles={["admin"]}>
                     <Layout>
                         <ReportHistory />
+                    </Layout>
+                </PrivateRoute>
+            }
+        />
+        <Route
+            path="/reports/history-reservations"
+            element={
+                <PrivateRoute allowedRoles={["admin"]}>
+                    <Layout>
+                        <ReservationHistory />
                     </Layout>
                 </PrivateRoute>
             }

@@ -58,6 +58,7 @@ const GuestForm = () => {
                                 <Form.Label>Nama Lengkap</Form.Label>
                                 <Form.Control
                                     type="text"
+                                    placeholder="Masukkan nama lengkap"
                                     value={form.full_name}
                                     onChange={(e) => setForm({ ...form, full_name: e.target.value })}
                                     required
@@ -67,6 +68,7 @@ const GuestForm = () => {
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control
                                     type="email"
+                                    placeholder="Masukkan email"
                                     value={form.email}
                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                     required
@@ -79,6 +81,7 @@ const GuestForm = () => {
                                 <Form.Label>No HP</Form.Label>
                                 <Form.Control
                                     type="number"
+                                    placeholder="Masukkan nomor HP"
                                     value={form.phone_number}
                                     onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
                                 />
@@ -87,6 +90,7 @@ const GuestForm = () => {
                                 <Form.Label>Alamat</Form.Label>
                                 <Form.Control
                                     type="text"
+                                    placeholder="Masukkan alamat"
                                     value={form.address}
                                     onChange={(e) => setForm({ ...form, address: e.target.value })}
                                 />
@@ -98,6 +102,7 @@ const GuestForm = () => {
                                 <Form.Label>No KTP / Paspor</Form.Label>
                                 <Form.Control
                                     type="number"
+                                    placeholder="Masukkan nomor identitas"
                                     value={form.id_number}
                                     onChange={(e) => setForm({ ...form, id_number: e.target.value })}
                                 />
@@ -106,12 +111,12 @@ const GuestForm = () => {
                                 <Form.Label>Kebangsaan</Form.Label>
                                 <Form.Control
                                     type="text"
+                                    placeholder="Masukkan negara asal"
                                     value={form.nationality}
                                     onChange={(e) => setForm({ ...form, nationality: e.target.value })}
                                 />
                             </Col>
                         </Row>
-
                         <div className="d-flex gap-2">
                             <Button type="submit" variant="primary">
                                 {editId ? "Update" : "Simpan"} Tamu

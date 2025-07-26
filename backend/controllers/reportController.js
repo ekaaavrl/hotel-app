@@ -34,9 +34,12 @@ exports.getDailyReservations = async (req, res) => {
             JOIN guests g ON r.guest_id = g.guest_id
             JOIN rooms rm ON r.room_id = rm.room_id
             JOIN room_types rt ON rm.room_type_id = rt.room_type_id
-            WHERE DATE(r.check_in_date) = ?
+            WHERE 
+                DATE(r.check_in_date) = ? 
+                OR DATE(r.check_out_date) = ? 
+                OR (r.status = 'booked' AND DATE(r.check_in_date) = ?)
             ORDER BY r.check_in_date ASC
-        `, [selectedDate]);
+        `, [selectedDate, selectedDate, selectedDate]);
 
         res.json(rows);
     } catch (err) {
@@ -100,3 +103,12 @@ exports.getRoomReport = async (req, res) => {
         res.status(500).json({ success: false, message: "Gagal mengambil data kamar" });
     }
 };
+exports.getReservationHistory = async (req, res) => {
+    try {
+        const data = await Report.getReservationHistory();
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ message: "Gagal ambil history reservasi", error: err.message });
+    }
+};
+

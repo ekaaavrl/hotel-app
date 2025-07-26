@@ -169,7 +169,11 @@ function SidebarAdmin() {
                         <div className="ms-3 mt-2 d-flex flex-column gap-2">
                             <NavLink to="/reports/history" style={({ isActive }) =>
                                 isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaHistory className="me-2" /> History Pembayaran
+                                <FaHistory className="me-2" /> Riwayat Pembayaran
+                            </NavLink>
+                            <NavLink to="/reports/history-reservations" style={({ isActive }) =>
+                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
+                                <FaHistory className="me-2" /> Riwayat Reservasi
                             </NavLink>
                             <NavLink to="/reports/reservations" style={({ isActive }) =>
                                 isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
