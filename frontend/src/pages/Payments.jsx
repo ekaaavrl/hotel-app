@@ -186,7 +186,9 @@ const Payments = () => {
                                             <td>Rp{parseInt(item.amount_paid).toLocaleString("id-ID")}</td>
                                             <td>Rp{parseInt(item.additional_fee || 0).toLocaleString("id-ID")}</td>
                                             <td>{item.payment_method}</td>
-                                            <td>{item.notes || "Belum ada catatan"}</td>
+                                            <td className={item.notes ? "" : "text-muted fst-italic"}>
+                                                {item.notes || "Belum ada catatan"}
+                                            </td>
                                             <td>{new Date(item.payment_date).toLocaleDateString("id-ID")}</td>
                                             <td>
                                                 <Button size="sm" variant="outline-primary" className="me-2" onClick={() => handleEdit(item)}>
