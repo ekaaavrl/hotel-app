@@ -279,7 +279,7 @@ const Payments = () => {
                                 <option value="cash">Cash</option>
                                 <option value="credit_card">Kartu Kredit</option>
                                 <option value="debit_card">Kartu Debit</option>
-                                <option value="transfer">Transfer</option>
+                                <option value="bank_transfer">Transfer</option>
                             </Form.Select>
                         </Form.Group>
 
@@ -288,7 +288,7 @@ const Payments = () => {
                             <Form.Control
                                 as="textarea"
                                 rows={2}
-                                placeholder="Opsional, misalnya catatan pembayaran"
+                                placeholder="Catatan pembayaran"
                                 value={form.notes}
                                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
                             />

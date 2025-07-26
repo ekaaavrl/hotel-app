@@ -41,15 +41,18 @@ const RoomServices = () => {
                     reservation_id: data.reservation_id,
                     service_description: data.service_description,
                     status: data.status,
+                    fee: data.fee ?? "", // ✅ tambahkan ini!
                 }
                 : {
                     reservation_id: "",
                     service_description: "",
                     status: "pending",
+                    fee: "", // ✅ default juga
                 }
         );
         setShow(true);
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -256,12 +259,11 @@ const RoomServices = () => {
                             <Form.Label>Biaya Layanan</Form.Label>
                             <Form.Control
                                 type="number"
-                                value={form.fee || 0}
+                                value={form.fee ?? ""}
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     setForm({ ...form, fee: value === "" ? "" : parseInt(value) });
                                 }}
-
                             />
                         </Form.Group>
                         <Form.Group className="mb-2">

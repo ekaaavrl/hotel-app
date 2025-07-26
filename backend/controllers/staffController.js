@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const Staff = require("../models/staffModel");
 
 exports.getAll = async (req, res) => {
@@ -11,12 +12,13 @@ exports.getAll = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        await Staff.createStaff(req.body);
-        res.json({ message: "Staff berhasil ditambahkan" });
+        const userMessage = await Staff.createStaff(req.body);
+        res.json({ message: "Staff berhasil ditambahkan", userMessage });
     } catch (err) {
         res.status(500).json({ message: "Gagal tambah staff" });
     }
 };
+
 
 exports.update = async (req, res) => {
     try {
