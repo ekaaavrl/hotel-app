@@ -9,6 +9,7 @@ import {
     Card
 } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
+
 const Payments = () => {
     const [payments, setPayments] = useState([]);
     const [reservations, setReservations] = useState([]);
@@ -17,6 +18,7 @@ const Payments = () => {
         amount_paid: "",
         payment_method: "cash",
         notes: "",
+        additional_fee: 0, // ✅ Tambah ini
     });
     const [show, setShow] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState(null);
@@ -40,16 +42,17 @@ const Payments = () => {
             const completed = res.data.filter(item => item.status === 'completed');
             const totalFee = completed.reduce((sum, item) => sum + (item.fee || 0), 0);
             setAdditionalFee(totalFee);
+            setForm(prev => ({ ...prev, additional_fee: totalFee })); // ✅ simpan ke form juga
         } catch (err) {
             console.error("Gagal mengambil layanan kamar:", err);
             setAdditionalFee(0);
+            setForm(prev => ({ ...prev, additional_fee: 0 }));
         }
     };
 
     const fetchServiceDescriptions = async (reservationId) => {
         try {
             const res = await api.get(`/services/notes?reservation_id=${reservationId}`);
-            console.log("Catatan layanan:", res.data);
             if (res.data && typeof res.data.notes === "string") {
                 setServiceDescriptions(res.data.notes);
             } else {
@@ -70,22 +73,27 @@ const Payments = () => {
         e.preventDefault();
 
         const payload = {
-            reservation_id: form.reservation_id,
+            reservation_id: parseInt(form.reservation_id),
             amount_paid: parseInt(form.amount_paid) || 0,
             payment_method: form.payment_method,
-            additional_fee: parseInt(additionalFee) || 0,
+            additional_fee: parseInt(form.additional_fee) || 0,
             notes: form.notes || "",
         };
 
-        if (editId) {
-            await api.put(`/payments/${editId}`, payload);
-        } else {
-            await api.post("/payments", payload);
-        }
+        try {
+            if (editId) {
+                await api.put(`/payments/${editId}`, payload);
+            } else {
+                await api.post("/payments", payload);
+            }
 
-        setShow(false);
-        fetchPayments();
-        resetForm();
+            setShow(false);
+            fetchPayments();
+            resetForm();
+        } catch (err) {
+            console.error("Gagal simpan pembayaran:", err);
+            alert("Gagal menyimpan pembayaran. Pastikan data lengkap.");
+        }
     };
 
     const handleEdit = async (payment) => {
@@ -95,10 +103,11 @@ const Payments = () => {
             amount_paid: payment.amount_paid,
             payment_method: payment.payment_method,
             notes: payment.notes || "",
+            additional_fee: payment.additional_fee || 0, // ✅ penting
         });
         setSelectedReservation({
             ...reservation,
-            total_price: reservation?.total_price || payment.total_price || 0 // fallback
+            total_price: reservation?.total_price || payment.total_price || 0
         });
         setAdditionalFee(payment.additional_fee || 0);
         setEditId(payment.payment_id);
@@ -114,7 +123,6 @@ const Payments = () => {
         setShow(true);
     };
 
-
     const handleDelete = async (id) => {
         if (window.confirm("Yakin ingin menghapus pembayaran ini?")) {
             await api.delete(`/payments/${id}`);
@@ -128,6 +136,7 @@ const Payments = () => {
             amount_paid: "",
             payment_method: "cash",
             notes: "",
+            additional_fee: 0
         });
         setAdditionalFee(0);
         setSelectedReservation(null);
@@ -230,7 +239,6 @@ const Payments = () => {
                             <Form.Label>Jumlah yang Dibayar</Form.Label>
                             <Form.Control
                                 type="number"
-                                required
                                 value={form.amount_paid}
                                 onChange={(e) => setForm({ ...form, amount_paid: e.target.value })}
                             />
@@ -238,19 +246,19 @@ const Payments = () => {
 
                         <Form.Group className="mb-2">
                             <Form.Label>Biaya Tambahan (otomatis)</Form.Label>
-                            <Form.Control type="number" value={additionalFee} disabled />
+                            <Form.Control type="number" value={form.additional_fee} disabled />
                         </Form.Group>
 
                         {selectedReservation && (
                             <div className="mt-3" style={{ fontSize: "13px", background: "#f8f9fa", padding: "10px", borderRadius: "5px" }}>
                                 <p className="mb-1"><strong>Rincian Tagihan:</strong></p>
                                 <p className="mb-1">Total Harga Reservasi: Rp{parseInt(selectedReservation.total_price || 0).toLocaleString("id-ID")}</p>
-                                <p className="mb-1">Biaya Tambahan: Rp{parseInt(additionalFee || 0).toLocaleString("id-ID")}</p>
+                                <p className="mb-1">Biaya Tambahan: Rp{parseInt(form.additional_fee || 0).toLocaleString("id-ID")}</p>
                                 <p className="mb-1 text-danger fw-bold">Total Tagihan: Rp{(
-                                    parseInt(selectedReservation.total_price || 0) + parseInt(additionalFee || 0)
+                                    parseInt(selectedReservation.total_price || 0) + parseInt(form.additional_fee || 0)
                                 ).toLocaleString("id-ID")}</p>
                                 <p className="mb-1 text-primary fw-bold">Sisa Tagihan: Rp{(
-                                    (parseInt(selectedReservation.total_price || 0) + parseInt(additionalFee || 0)) -
+                                    (parseInt(selectedReservation.total_price || 0) + parseInt(form.additional_fee || 0)) -
                                     parseInt(form.amount_paid || 0)
                                 ).toLocaleString("id-ID")}</p>
 

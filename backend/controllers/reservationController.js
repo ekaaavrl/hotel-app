@@ -1,13 +1,12 @@
 const db = require("../config/db");
 
-// 🔧 Helper untuk hitung selisih hari
+// 🔧 Helper untuk hitung selisih hari (jika dibutuhkan)
 const countDays = (start, end) => {
     const msPerDay = 1000 * 60 * 60 * 24;
     return Math.ceil((new Date(end) - new Date(start)) / msPerDay);
 };
 
-// Buat reservasi
-// 📥 Buat reservasi & otomatis simpan ke payment
+// Buat reservasi (insert)
 exports.createReservation = async (req, res) => {
     const {
         guest_id,
@@ -19,12 +18,12 @@ exports.createReservation = async (req, res) => {
         total_price,
     } = req.body;
 
-    const conn = await db.getConnection(); // Ambil koneksi pool
+    const conn = await db.getConnection();
 
     try {
         await conn.beginTransaction();
 
-        // Simpan ke tabel reservations
+        // Insert ke reservations (trigger akan otomatis insert ke payments)
         const [reservationResult] = await conn.query(
             `INSERT INTO reservations 
              (guest_id, room_id, check_in_date, check_out_date, number_of_guests, status, total_price) 
@@ -34,37 +33,21 @@ exports.createReservation = async (req, res) => {
 
         const reservation_id = reservationResult.insertId;
 
-        // Simpan ke tabel payments
-        await conn.query(
-            `INSERT INTO payments (reservation_id, amount_paid, payment_method, additional_fee, notes) 
-             VALUES (?, ?, ?, ?, ?)`,
-            [
-                reservation_id,
-                0,                    // default unpaid
-                "cash",               // default metode
-                0,                    // default fee
-                "Auto generated from reservation"
-            ]
-        );
-
         await conn.commit();
 
-        // ✅ Response saat sukses
         res.status(201).json({
-            message: "Reservasi dan pembayaran berhasil disimpan",
-            reservation_id: reservation_id
+            message: "Reservasi berhasil disimpan",
+            reservation_id,
         });
 
     } catch (err) {
-        await conn.rollback(); // rollback jika error
-        console.error("Gagal simpan reservasi & pembayaran:", err);
-        res.status(500).json({ message: "Gagal menyimpan reservasi dan pembayaran" });
+        await conn.rollback();
+        console.error("Gagal simpan reservasi:", err);
+        res.status(500).json({ message: "Gagal menyimpan reservasi" });
     } finally {
-        conn.release(); // wajib dikembalikan ke pool
+        conn.release();
     }
 };
-
-
 
 // Update reservasi
 exports.updateReservation = async (req, res) => {
@@ -79,18 +62,29 @@ exports.updateReservation = async (req, res) => {
         total_price,
     } = req.body;
 
-    await db.query(
-        `UPDATE reservations SET 
-        guest_id = ?, room_id = ?, check_in_date = ?, check_out_date = ?, 
-        number_of_guests = ?, status = ?, total_price = ? 
-        WHERE reservation_id = ?`,
-        [guest_id, room_id, check_in_date, check_out_date, number_of_guests, status, total_price, id]
-    );
+    try {
+        await db.query(
+            `UPDATE reservations SET 
+             guest_id = ?, room_id = ?, check_in_date = ?, check_out_date = ?, 
+             number_of_guests = ?, status = ?, total_price = ? 
+             WHERE reservation_id = ?`,
+            [guest_id, room_id, check_in_date, check_out_date, number_of_guests, status, total_price, id]
+        );
 
-    res.json({ message: "Reservasi berhasil diupdate" });
+        // Jika status diubah ke "checked_out", panggil prosedur untuk update biaya tambahan
+        if (status === "checked_out") {
+            await db.query("CALL update_additional_fee_and_notes(?)", [id]);
+        }
+
+        res.json({ message: "Reservasi berhasil diupdate" });
+
+    } catch (err) {
+        console.error("Gagal update reservasi:", err);
+        res.status(500).json({ message: "Gagal mengupdate reservasi" });
+    }
 };
 
-// 📥 Ambil semua reservasi
+// Ambil semua reservasi
 exports.getReservations = async (req, res) => {
     try {
         const [results] = await db.query(`
@@ -107,7 +101,32 @@ exports.getReservations = async (req, res) => {
     }
 };
 
-// 🗑️ Hapus reservasi
+// Ambil reservasi berdasarkan ID
+exports.getReservationById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const [results] = await db.query(`
+            SELECT r.*, g.full_name AS guest_name, rm.room_number
+            FROM reservations r
+            JOIN guests g ON r.guest_id = g.guest_id
+            JOIN rooms rm ON r.room_id = rm.room_id
+            WHERE r.reservation_id = ?`,
+            [id]
+        );
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Reservasi tidak ditemukan." });
+        }
+
+        res.json(results[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Gagal mengambil detail reservasi." });
+    }
+};
+
+// Hapus reservasi
 exports.deleteReservation = async (req, res) => {
     const { id } = req.params;
 
@@ -122,31 +141,9 @@ exports.deleteReservation = async (req, res) => {
         }
 
         res.json({ message: "Reservasi berhasil dihapus." });
+
     } catch (error) {
         console.error("Gagal menghapus reservasi:", error);
         res.status(500).json({ message: "Gagal menghapus reservasi." });
-    }
-};
-// 📄 Ambil satu reservasi berdasarkan ID
-exports.getReservationById = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const [results] = await db.query(`
-            SELECT r.*, g.full_name AS guest_name, rm.room_number
-            FROM reservations r
-            JOIN guests g ON r.guest_id = g.guest_id
-            JOIN rooms rm ON r.room_id = rm.room_id
-            WHERE r.reservation_id = ?
-        `, [id]);
-
-        if (results.length === 0) {
-            return res.status(404).json({ message: "Reservasi tidak ditemukan." });
-        }
-
-        res.json(results[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Gagal mengambil detail reservasi." });
     }
 };
