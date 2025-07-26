@@ -142,7 +142,7 @@ const RoomServices = () => {
                                     <tr key={s.request_id}>
                                         <td>{(currentPage - 1) * itemsPerPage + i + 1}</td>
                                         <td>{s.full_name || "-"}</td>
-                                        <td>{s.reservation_id}</td>
+                                        <td>RSV-{s.reservation_id}</td>
                                         <td>{s.service_description}</td>
                                         <td>Rp{parseInt(s.fee || 0).toLocaleString("id-ID")}</td> {/* Tambahan */}
                                         <td>{new Date(s.request_time).toLocaleString("id-ID")}</td>
