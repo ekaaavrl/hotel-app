@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 28, 2025 at 01:27 PM
+-- Generation Time: Jul 28, 2025 at 06:17 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -245,7 +245,7 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_id`, `room_number`, `room_type_id`, `price_per_night`, `status`, `description`) VALUES
-(1, '101', 1, 300000.00, 'available', 'Kamar dengan fasilitas 1 kasur, dan 1 kamar mandi'),
+(1, '101', 1, 300000.00, 'maintenance', 'Kamar dengan fasilitas 1 kasur, dan 1 kamar mandi'),
 (2, '102', 1, 300000.00, 'available', 'Kamar dengan fasilitas 1 kasur, dan 1 kamar mandi'),
 (3, '103', 1, 300000.00, 'available', 'Kamar dengan fasilitas 1 kasur, dan 1 kamar mandi'),
 (4, '104', 1, 300000.00, 'available', 'Kamar dengan fasilitas 1 kasur, dan 1 kamar mandi'),
@@ -671,14 +671,14 @@ INSERT INTO `room_service_requests` (`request_id`, `reservation_id`, `service_de
 (3, 16, 'laundry 2 kg', '2025-07-24 23:50:19', 'pending', 0),
 (4, 17, 'laundry', '2025-07-25 00:11:18', 'completed', 0),
 (5, 17, 'nambah sarapan', '2025-07-25 01:08:49', 'completed', 0),
-(6, 13, 'makan siang, makan malam', '2025-07-25 01:15:37', 'completed', 0),
+(6, 13, 'celimut', '2025-07-25 01:15:37', 'completed', 0),
 (7, 14, 'laundry sama apa kek', '2025-07-25 01:47:06', 'completed', 0),
 (8, 18, 'Tambah handuk, cleaning service, laundry 3 hari 10kg', '2025-07-25 05:25:37', 'completed', 200000),
 (9, 23, 'BANYAK', '2025-07-25 11:47:50', 'completed', 100000),
 (10, 26, 'pppppp', '2025-07-25 14:44:12', 'completed', 50000),
 (12, 29, 'jahsakhs', '2025-07-25 16:11:14', 'completed', 50000),
-(14, 32, 'makan siangggg', '2025-07-26 04:17:03', 'completed', 100000),
-(15, 33, 'lunch', '2025-07-26 05:04:50', 'completed', 100000),
+(14, 32, 'cikat gigi duyu', '2025-07-26 04:17:03', 'completed', 100000),
+(15, 33, 'mau anduk bentuk love', '2025-07-26 05:04:50', 'completed', 100000),
 (17, 43, 'mam cianggg duyu', '2025-07-27 09:07:31', 'completed', 200000),
 (18, 44, 'tambah anduk', '2025-07-27 10:03:30', 'completed', 150000);
 
@@ -751,7 +751,6 @@ CREATE TABLE `staff` (
 
 INSERT INTO `staff` (`staff_id`, `full_name`, `position`, `email`, `phone_number`, `hire_date`, `status`) VALUES
 (1, 'Rina Kusuma', 'Housekeeping', 'rina@hotel.com', '0811111111', '2023-02-27', 'active'),
-(2, 'Budi Santoso', 'Manager', 'budi@hotel.com', '0822222222', '2020-10-10', 'active'),
 (5, 'Olaf Frozen', 'Security', 'staff04@hotel.com', '0893748374', NULL, 'active'),
 (6, 'Samsudin', 'Staff 2', 'staff05@hotel.com', '0832939245', NULL, 'active'),
 (7, 'Elsa Frozen', 'Resepsionis B', 'resep02@gmail.com', '0898937394', NULL, 'active');
@@ -784,7 +783,8 @@ INSERT INTO `users` (`user_id`, `username`, `password_hash`, `full_name`, `email
 (4, 'ekav', '$2b$10$342Nfy9zg55ebxt8gWWa8.HoSjHzHN8ULCTIZqIXFBpqJFUbVcT9K', 'Eka Avriliana', 'ekaaavrl@gmail.com', 'admin', 'active', '2025-07-23 04:51:31'),
 (8, 'staff04', '$2b$10$DFeS.o8d.UB9HcAZ/iKHrOGFE52mbF.18yYgUOmdYvawFyXeo8b4q', 'Olaf Frozen', 'staff04@hotel.com', 'staff', 'active', '2025-07-26 03:25:45'),
 (9, 'staff05', '$2b$10$L5O5YPR4C7s27d/tGaHX6eLW2Z1M1AhPC.Jm8JWDUwY/FZM8aCUe2', 'Samsudin', 'staff05@hotel.com', 'staff', 'active', '2025-07-26 03:29:37'),
-(10, 'resep02', '$2b$10$UfHLUk3RndQQo2JHpHPRWu1evi/ElPpKGjtGbEu2eaZxUkViCtxfu', 'Elsa Frozen', 'resep02@gmail.com', 'staff', 'active', '2025-07-26 03:31:31');
+(10, 'resep02', '$2b$10$UfHLUk3RndQQo2JHpHPRWu1evi/ElPpKGjtGbEu2eaZxUkViCtxfu', 'Elsa Frozen', 'resep02@gmail.com', 'staff', 'active', '2025-07-26 03:31:31'),
+(11, 'manager', '$2b$10$f7GNHSGH6Jzsmfk82o7S7ORAX8v9Omj14nsGEd1FwuHoEC1iFMqXe', 'Falih Aqmar', 'manager@hotel.com', 'manager', 'active', '2025-07-28 16:17:14');
 
 -- --------------------------------------------------------
 
@@ -924,7 +924,23 @@ INSERT INTO `user_logs` (`log_id`, `user_id`, `action_type`, `description`, `log
 (116, 2, 'login', 'Login berhasil', '2025-07-28 00:33:13', '192.168.88.45'),
 (117, 2, 'logout', 'Logout dari sistem', '2025-07-28 00:45:22', '192.168.88.45'),
 (118, 4, 'login', 'Login berhasil', '2025-07-28 00:45:59', '192.168.88.45'),
-(119, 1, 'login', 'Login berhasil', '2025-07-28 12:21:27', '192.168.88.45');
+(119, 1, 'login', 'Login berhasil', '2025-07-28 12:21:27', '192.168.88.45'),
+(120, 1, 'login', 'Login berhasil', '2025-07-28 14:33:55', '192.168.88.45'),
+(121, 1, 'edit_service', 'Mengubah layanan ID: 14', '2025-07-28 15:31:14', '192.168.88.45'),
+(122, 1, 'edit_service', 'Mengubah layanan ID: 15', '2025-07-28 15:31:40', '192.168.88.45'),
+(123, 1, 'edit_service', 'Mengubah layanan ID: 6', '2025-07-28 15:32:07', '192.168.88.45'),
+(124, 1, 'logout', 'Logout dari sistem', '2025-07-28 15:52:22', '192.168.88.45'),
+(125, 1, 'login', 'Login berhasil', '2025-07-28 15:55:51', '192.168.88.45'),
+(126, 1, 'logout', 'Logout dari sistem', '2025-07-28 16:07:10', '192.168.88.45'),
+(127, 1, 'login', 'Login berhasil', '2025-07-28 16:07:18', '192.168.88.45'),
+(128, 1, 'logout', 'Logout dari sistem', '2025-07-28 16:07:25', '192.168.88.45'),
+(129, 4, 'login', 'Login berhasil', '2025-07-28 16:07:31', '192.168.88.45'),
+(130, 4, 'logout', 'Logout dari sistem', '2025-07-28 16:11:02', '192.168.88.45'),
+(131, 4, 'login', 'Login berhasil', '2025-07-28 16:15:35', '192.168.88.45'),
+(132, 4, 'logout', 'Logout dari sistem', '2025-07-28 16:17:19', '192.168.88.45'),
+(133, 11, 'login', 'Login berhasil', '2025-07-28 16:17:32', '192.168.88.45'),
+(134, 11, 'logout', 'Logout dari sistem', '2025-07-28 16:22:44', '192.168.88.45'),
+(135, 1, 'login', 'Login berhasil', '2025-07-28 16:27:33', '192.168.88.45');
 
 --
 -- Indexes for dumped tables
@@ -1043,13 +1059,13 @@ ALTER TABLE `staff`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 
 --
 -- Constraints for dumped tables
