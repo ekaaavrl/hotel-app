@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 26, 2025 at 12:10 PM
+-- Generation Time: Jul 28, 2025 at 01:27 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -116,7 +116,12 @@ INSERT INTO `guests` (`guest_id`, `full_name`, `email`, `phone_number`, `address
 (40, 'abc', 'abc@example.com', '020830230', 'abc', '12102', 'abc', '2025-07-25 15:47:43'),
 (41, 'pppp', 'ppp@example.com', '00823409', 'ppp', '0180121', 'ppp', '2025-07-25 17:04:02'),
 (42, 'fix', 'fix@example.com', '0283928392', 'fix', '223232', 'fix', '2025-07-26 04:51:44'),
-(43, 'ariana', 'ariana@example.com', '02382938', 'saksjal', '92832', 'kajska', '2025-07-26 11:00:54');
+(43, 'ariana', 'ariana@example.com', '02382938', 'saksjal', '92832', 'kajska', '2025-07-26 11:00:54'),
+(44, 'ekav', 'ekav@example.com', '08938293', 'Depok', '29832', 'Indonesia', '2025-07-27 05:10:57'),
+(46, 'Avrilia', 'avril@example.com', '0282038', 'Bandung', '822983', 'Indonesia', '2025-07-27 08:00:23'),
+(47, 'Pattrick', 'pattrick@example.com', '09200110', 'Bikini bottom', '93829830', 'WNA', '2025-07-27 08:19:18'),
+(48, 'tumblr', 'tumblr@example.com', '019201', 'Surabaya', '01920', 'Indonesia', '2025-07-27 08:55:15'),
+(49, 'Ana Frozen', 'ana@example.com', '029320', 'Arendelle', '92389', 'WNA', '2025-07-27 10:01:18');
 
 -- --------------------------------------------------------
 
@@ -147,12 +152,9 @@ INSERT INTO `payments` (`payment_id`, `reservation_id`, `amount_paid`, `payment_
 (11, 18, 3200000.00, '2025-07-25 08:14:05', 'bank_transfer', 'Lunasssssssssssssz', 200000),
 (12, 22, 0.00, '2025-07-25 11:30:57', 'cash', 'Auto generated from reservation', 0),
 (13, 23, 200000.00, '2025-07-25 11:35:50', 'cash', 'baru DP', 300000),
-(16, 26, 0.00, '2025-07-25 14:26:31', 'cash', 'Auto generated from reservation', 0),
-(18, 28, 0.00, '2025-07-25 15:20:34', 'cash', 'Auto generated from reservation', 0),
-(19, 29, 1000000.00, '2025-07-25 15:48:17', 'cash', 'bener', 0),
-(25, 33, 1300000.00, '2025-07-26 04:52:11', 'bank_transfer', 'lunas', 100000),
-(26, 34, 100000.00, '2025-07-26 05:56:12', 'cash', 'dp', 0),
-(27, 35, 0.00, '2025-07-26 11:01:58', 'cash', '', 0);
+(32, 40, 900000.00, '2025-07-27 08:12:54', 'cash', 'Lunas', 0),
+(35, 43, 1550000.00, '2025-07-27 08:56:10', 'cash', 'Lunas', 200000),
+(36, 44, 1000000.00, '2025-07-27 10:02:36', 'cash', 'dp dulu', 150000);
 
 -- --------------------------------------------------------
 
@@ -205,7 +207,12 @@ INSERT INTO `reservations` (`reservation_id`, `guest_id`, `room_id`, `check_in_d
 (32, 41, 23, '2025-07-26 00:00:00', '2025-07-30 00:00:00', 2, 'booked', 1200000.00, '2025-07-26 04:15:37'),
 (33, 42, 7, '2025-07-26 00:00:00', '2025-07-30 00:00:00', 2, 'booked', 1200000.00, '2025-07-26 04:52:11'),
 (34, 29, 100, '2025-07-24 00:00:00', '2025-07-28 00:00:00', 2, 'cancelled', 1200000.00, '2025-07-26 05:56:12'),
-(35, 43, 209, '2025-07-26 19:00:00', '2025-07-30 05:00:00', 1, 'booked', 2400000.00, '2025-07-26 11:01:58');
+(35, 43, 209, '2025-07-26 19:00:00', '2025-07-30 05:00:00', 1, 'booked', 2400000.00, '2025-07-26 11:01:58'),
+(37, 44, 51, '2025-07-27 07:30:00', '2025-07-30 18:30:00', 1, 'booked', 1200000.00, '2025-07-27 05:27:08'),
+(40, 46, 12, '2025-07-27 18:00:00', '2025-07-30 14:00:00', 2, 'booked', 900000.00, '2025-07-27 08:12:54'),
+(42, 47, 3, '2025-07-27 17:50:00', '2025-07-30 17:50:00', 1, 'booked', NULL, '2025-07-27 08:34:02'),
+(43, 48, 101, '2025-07-27 20:30:00', '2025-07-30 20:30:00', 1, 'checked_in', 1350000.00, '2025-07-27 08:56:10'),
+(44, 49, 301, '2025-07-27 17:00:00', '2025-07-30 19:00:00', 10, 'checked_in', 3600000.00, '2025-07-27 10:02:36');
 
 --
 -- Triggers `reservations`
@@ -671,7 +678,9 @@ INSERT INTO `room_service_requests` (`request_id`, `reservation_id`, `service_de
 (10, 26, 'pppppp', '2025-07-25 14:44:12', 'completed', 50000),
 (12, 29, 'jahsakhs', '2025-07-25 16:11:14', 'completed', 50000),
 (14, 32, 'makan siangggg', '2025-07-26 04:17:03', 'completed', 100000),
-(15, 33, 'lunch', '2025-07-26 05:04:50', 'completed', 100000);
+(15, 33, 'lunch', '2025-07-26 05:04:50', 'completed', 100000),
+(17, 43, 'mam cianggg duyu', '2025-07-27 09:07:31', 'completed', 200000),
+(18, 44, 'tambah anduk', '2025-07-27 10:03:30', 'completed', 150000);
 
 --
 -- Triggers `room_service_requests`
@@ -839,7 +848,83 @@ INSERT INTO `user_logs` (`log_id`, `user_id`, `action_type`, `description`, `log
 (40, 1, 'login', 'Login berhasil', '2025-07-25 17:30:25', '192.168.88.45'),
 (41, 1, 'login', 'Login berhasil', '2025-07-26 02:24:50', '192.168.88.45'),
 (42, 1, 'login', 'Login berhasil', '2025-07-26 05:52:28', '192.168.88.45'),
-(43, 1, 'login', 'Login berhasil', '2025-07-26 09:43:50', '192.168.88.45');
+(43, 1, 'login', 'Login berhasil', '2025-07-26 09:43:50', '192.168.88.45'),
+(44, 1, 'login', 'Login berhasil', '2025-07-26 14:34:45', '192.168.88.45'),
+(45, 1, 'login', 'Login berhasil', '2025-07-26 14:35:18', '192.168.88.45'),
+(46, 1, 'login', 'Login berhasil', '2025-07-26 14:39:55', '192.168.88.45'),
+(47, 1, 'login', 'Login berhasil', '2025-07-26 14:40:07', '192.168.88.45'),
+(48, 1, 'login', 'Login berhasil', '2025-07-26 14:44:14', '192.168.88.45'),
+(49, 1, 'login', 'Login berhasil', '2025-07-27 04:39:21', '192.168.88.45'),
+(50, 1, 'login', 'Login berhasil', '2025-07-27 04:46:01', '192.168.88.45'),
+(51, 1, 'login', 'Login berhasil', '2025-07-27 04:53:36', '192.168.88.45'),
+(52, 4, 'login', 'Login berhasil', '2025-07-27 04:57:18', '192.168.88.45'),
+(53, 4, 'login', 'Login berhasil', '2025-07-27 05:00:33', '192.168.88.45'),
+(54, 4, 'logout', 'Logout dari sistem', '2025-07-27 05:00:42', '::1'),
+(55, 4, 'login', 'Login berhasil', '2025-07-27 05:00:51', '192.168.88.45'),
+(56, 4, 'logout', 'Logout dari sistem', '2025-07-27 05:03:52', '192.168.88.45'),
+(57, 4, 'login', 'Login berhasil', '2025-07-27 05:04:05', '192.168.88.45'),
+(58, 4, 'logout', 'Logout dari sistem', '2025-07-27 05:04:10', '192.168.88.45'),
+(59, 4, 'login', 'Login berhasil', '2025-07-27 05:04:16', '192.168.88.45'),
+(60, 4, 'add_guest', 'Menambahkan tamu: ekav', '2025-07-27 05:10:57', '::1'),
+(61, 4, 'login', 'Login berhasil', '2025-07-27 06:49:12', '192.168.88.45'),
+(62, 4, 'update_payment', 'Mengubah pembayaran ID: 18', '2025-07-27 07:30:29', '::1'),
+(63, 4, 'delete_payment', 'Menghapus pembayaran ID: 16', '2025-07-27 07:40:07', '::1'),
+(64, 4, 'add_guest', 'Menambahkan tamu: upin', '2025-07-27 07:49:40', '::1'),
+(65, 4, 'add_guest', 'Menambahkan tamu: Avril', '2025-07-27 08:00:23', '192.168.88.45'),
+(66, 4, 'edit_guest', 'Mengedit tamu ID: 46', '2025-07-27 08:00:44', '192.168.88.45'),
+(67, NULL, 'create_reservation', 'Membuat reservasi ID: 38', '2025-07-27 08:01:54', '::1'),
+(68, 4, 'delete_guest', 'Menghapus tamu ID: 45', '2025-07-27 08:02:26', '192.168.88.45'),
+(69, 4, 'delete_payment', 'Menghapus pembayaran ID: 30', '2025-07-27 08:06:40', '::1'),
+(70, NULL, 'delete_reservation', 'Menghapus reservasi ID: 38', '2025-07-27 08:06:55', '::1'),
+(71, NULL, 'create_reservation', 'Membuat reservasi ID: 39', '2025-07-27 08:07:53', '::1'),
+(72, 4, 'delete_payment', 'Menghapus pembayaran ID: 31', '2025-07-27 08:12:06', '::1'),
+(73, NULL, 'delete_reservation', 'Menghapus reservasi ID: 39', '2025-07-27 08:12:14', '192.168.88.45'),
+(74, NULL, 'create_reservation', 'Membuat reservasi ID: 40', '2025-07-27 08:12:54', '192.168.88.45'),
+(75, 4, 'add_guest', 'Menambahkan tamu: Pattrick', '2025-07-27 08:19:18', '192.168.88.45'),
+(76, NULL, 'create_reservation', 'Membuat reservasi ID: 41', '2025-07-27 08:19:59', '192.168.88.45'),
+(77, 4, 'update_payment', 'Mengubah pembayaran ID: 33', '2025-07-27 08:31:36', '::1'),
+(78, 4, 'delete_payment', 'Menghapus pembayaran ID: 33', '2025-07-27 08:31:53', '::1'),
+(79, 4, 'delete_reservation', 'Menghapus reservasi ID: 41', '2025-07-27 08:33:00', '192.168.88.45'),
+(80, 4, 'create_reservation', 'Membuat reservasi ID: 42', '2025-07-27 08:34:02', '192.168.88.45'),
+(81, 4, 'update_reservation', 'Mengubah reservasi ID: 42', '2025-07-27 08:34:23', '192.168.88.45'),
+(82, 4, 'add_guest', 'Menambahkan tamu: tumblr', '2025-07-27 08:55:15', '192.168.88.45'),
+(83, 4, 'create_reservation', 'Membuat reservasi ID: 43', '2025-07-27 08:56:10', '192.168.88.45'),
+(84, 4, 'update_reservation', 'Mengubah reservasi ID: 43', '2025-07-27 09:07:00', '192.168.88.45'),
+(85, 1, 'login', 'Login berhasil', '2025-07-27 09:26:10', '192.168.88.45'),
+(86, 1, 'update_payment', 'Mengubah pembayaran ID: 32', '2025-07-27 09:26:40', '::1'),
+(87, 1, 'delete_payment', 'Menghapus pembayaran ID: 34', '2025-07-27 09:26:56', '::1'),
+(88, 1, 'update_payment', 'Mengubah pembayaran ID: 35', '2025-07-27 09:27:19', '::1'),
+(89, 1, 'update_reservation', 'Mengubah reservasi ID: 43', '2025-07-27 09:29:32', '192.168.88.45'),
+(90, 1, 'edit_service', 'Mengubah layanan ID: 17', '2025-07-27 09:33:25', '192.168.88.45'),
+(91, 1, 'edit_service', 'Mengubah layanan ID: 17', '2025-07-27 09:44:52', '192.168.88.45'),
+(92, 1, 'logout', 'Logout dari sistem', '2025-07-27 09:58:28', '192.168.88.45'),
+(93, 1, 'login', 'Login berhasil', '2025-07-27 09:58:54', '192.168.88.45'),
+(94, 1, 'logout', 'Logout dari sistem', '2025-07-27 09:59:16', '192.168.88.45'),
+(95, 2, 'login', 'Login berhasil', '2025-07-27 09:59:31', '192.168.88.45'),
+(96, 2, 'add_guest', 'Menambahkan tamu: Ana Frozen', '2025-07-27 10:01:18', '192.168.88.45'),
+(97, 2, 'create_reservation', 'Membuat reservasi ID: 44', '2025-07-27 10:02:36', '192.168.88.45'),
+(98, 2, 'add_service', 'Menambahkan layanan untuk reservasi ID: 44', '2025-07-27 10:03:31', '192.168.88.45'),
+(99, 2, 'edit_service', 'Mengubah layanan ID: 18', '2025-07-27 10:03:35', '192.168.88.45'),
+(100, 2, 'update_reservation', 'Mengubah reservasi ID: 44', '2025-07-27 10:03:44', '192.168.88.45'),
+(101, 2, 'update_payment', 'Mengubah pembayaran ID: 36', '2025-07-27 10:04:00', '192.168.88.45'),
+(102, 2, 'update_payment', 'Mengubah pembayaran ID: 36', '2025-07-27 10:04:12', '192.168.88.45'),
+(103, 2, 'logout', 'Logout dari sistem', '2025-07-27 10:04:22', '192.168.88.45'),
+(104, 1, 'login', 'Login berhasil', '2025-07-27 10:04:29', '192.168.88.45'),
+(105, 1, 'logout', 'Logout dari sistem', '2025-07-27 10:04:46', '192.168.88.45'),
+(106, 4, 'login', 'Login berhasil', '2025-07-27 16:41:27', '192.168.88.45'),
+(107, 4, 'logout', 'Logout dari sistem', '2025-07-27 17:35:27', '192.168.88.45'),
+(108, 2, 'login', 'Login berhasil', '2025-07-27 17:35:34', '192.168.88.45'),
+(109, 2, 'logout', 'Logout dari sistem', '2025-07-27 17:41:21', '192.168.88.45'),
+(110, 4, 'login', 'Login berhasil', '2025-07-27 17:41:29', '192.168.88.45'),
+(111, 4, 'logout', 'Logout dari sistem', '2025-07-27 17:46:22', '192.168.88.45'),
+(112, 1, 'login', 'Login berhasil', '2025-07-27 23:14:47', '192.168.88.45'),
+(113, 1, 'logout', 'Logout dari sistem', '2025-07-28 00:08:02', '192.168.88.45'),
+(114, 1, 'login', 'Login berhasil', '2025-07-28 00:13:49', '192.168.88.45'),
+(115, 1, 'logout', 'Logout dari sistem', '2025-07-28 00:33:00', '192.168.88.45'),
+(116, 2, 'login', 'Login berhasil', '2025-07-28 00:33:13', '192.168.88.45'),
+(117, 2, 'logout', 'Logout dari sistem', '2025-07-28 00:45:22', '192.168.88.45'),
+(118, 4, 'login', 'Login berhasil', '2025-07-28 00:45:59', '192.168.88.45'),
+(119, 1, 'login', 'Login berhasil', '2025-07-28 12:21:27', '192.168.88.45');
 
 --
 -- Indexes for dumped tables
@@ -916,19 +1001,19 @@ ALTER TABLE `user_logs`
 -- AUTO_INCREMENT for table `guests`
 --
 ALTER TABLE `guests`
-  MODIFY `guest_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `guest_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `payment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `reservation_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `reservation_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -940,7 +1025,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `room_service_requests`
 --
 ALTER TABLE `room_service_requests`
-  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `request_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `room_types`
@@ -964,7 +1049,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- Constraints for dumped tables
