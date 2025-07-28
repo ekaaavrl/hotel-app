@@ -27,7 +27,7 @@ function Layout({ children }) {
                     left: 0,
                     width: "240px",
                     height: "calc(100vh - 56px)",
-                    backgroundColor: "#f1f5f9",
+                    backgroundColor: "#fffff",
                     borderRight: "1px solid #ddd",
                     zIndex: 1000,
                     overflowY: "auto",
@@ -44,7 +44,7 @@ function Layout({ children }) {
                     width: "calc(100vw - 240px)",
                     padding: "24px",
                     minHeight: "calc(100vh - 56px)",
-                    backgroundColor: "#f8f9fa",
+                    backgroundColor: "#fffff",
                     overflowX: "hidden",
                 }}
             >

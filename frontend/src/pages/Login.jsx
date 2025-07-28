@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import logo from "../assets/logo2.png";
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -39,28 +40,41 @@ function LoginPage() {
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100vw",
-                background: "linear-gradient(#343a40)",
-                color: "#fff",
+                backgroundColor: "#343a40", // background gelap
                 padding: "1rem",
             }}
         >
             <div style={{
-                background: "#fff",
+                background: "#fff", // card putih
                 padding: "2.5rem",
                 borderRadius: "1rem",
-                boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
+                boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
                 width: "100%",
                 maxWidth: "400px",
-                color: "#333"
+                color: "#212529" // teks gelap
             }}>
-                <h3 className="mb-4 fw-bold text-center" style={{ color: "#343a40" }}>Hotel App</h3>
+                {/* Logo */}
+                <div className="text-center mb-3">
+                    <img
+                        src={logo}
+                        alt="Hotel Logo"
+                        style={{ width: "60px", height: "60px", objectFit: "contain" }}
+                    />
+                </div>
 
+                {/* Judul */}
+                <h3 className="mb-4 fw-bold text-center" style={{ color: "#343a40" }}>
+                    Hotel App
+                </h3>
+
+                {/* Error */}
                 {error && (
                     <div className="alert alert-danger text-center p-2 mb-3" style={{ fontSize: "14px" }}>
                         {error}
                     </div>
                 )}
 
+                {/* Form */}
                 <form onSubmit={handleLogin}>
                     <div className="mb-3">
                         <label className="form-label">Username</label>
@@ -73,7 +87,6 @@ function LoginPage() {
                             required
                             style={{ fontSize: "14px" }}
                         />
-
                     </div>
 
                     <div className="mb-4">
@@ -87,13 +100,18 @@ function LoginPage() {
                             required
                             style={{ fontSize: "14px" }}
                         />
-
                     </div>
 
                     <button
                         type="submit"
-                        className="btn btn-primary w-100 btn-lg shadow-sm"
-                        style={{ borderRadius: "50px", backgroundColor: "#343a40", border: "none", fontSize: "14px" }}
+                        className="btn w-100 btn-lg shadow-sm"
+                        style={{
+                            borderRadius: "50px",
+                            backgroundColor: "#343a40", // warna emas
+                            color: "#fff",
+                            border: "none",
+                            fontSize: "14px"
+                        }}
                     >
                         Login
                     </button>

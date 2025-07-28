@@ -8,19 +8,26 @@ const iconMap = {
     "bi-cash-coin": "bi bi-cash-coin",
 };
 
-export default function SummaryCard({ title, value, icon, color = "primary" }) {
+export default function SummaryCard({ title, value, icon }) {
+    const customColor = "#a3720f";
+
     return (
-        <Card className={`border-left-${color} shadow h-100 py-2`}>
+        <Card className="shadow h-100 py-2 border-0">
             <Card.Body>
                 <div className="d-flex align-items-center justify-content-between">
                     <div className="me-2">
-                        <div className={`text-xs fw-bold text-${color} text-uppercase mb-1`}>
+                        <div
+                            className="text-uppercase fw-bold small mb-1"
+                            style={{ color: "dark" }} // warna title tetap abu seperti default
+                        >
                             {title}
                         </div>
-                        <div className="h5 mb-0 fw-bold text-gray-800">{value}</div>
+                        <div className="h5 mb-0 fw-bold" style={{ color: customColor }}>
+                            {value}
+                        </div>
                     </div>
                     <div className="col-auto">
-                        <i className={`${iconMap[icon]} fs-2 text-gray-300`}></i>
+                        <i className={`${iconMap[icon]} fs-2`} style={{ color: customColor }}></i>
                     </div>
                 </div>
             </Card.Body>

@@ -10,7 +10,7 @@ export default function SummaryCardsGroup({ stats }) {
                     title="Tamu Hari Ini"
                     value={stats.guestsToday}
                     icon="bi-people-fill"
-                    color="primary"
+                    color="dark"
                 />
             </Col>
             <Col xs={12} md={6} lg={3}>
@@ -18,7 +18,7 @@ export default function SummaryCardsGroup({ stats }) {
                     title="Kamar Tersedia"
                     value={stats.roomsAvailable}
                     icon="bi-door-closed-fill"
-                    color="success"
+                    color="dark"
                 />
             </Col>
             <Col xs={12} md={6} lg={3}>
@@ -26,7 +26,7 @@ export default function SummaryCardsGroup({ stats }) {
                     title="Reservasi Aktif"
                     value={stats.activeReservations}
                     icon="bi-calendar-check-fill"
-                    color="warning"
+                    color="dark"
                 />
             </Col>
             <Col xs={12} md={6} lg={3}>
@@ -34,7 +34,7 @@ export default function SummaryCardsGroup({ stats }) {
                     title="Pendapatan Hari Ini"
                     value={`Rp${stats.incomeToday.toLocaleString("id-ID")}`}
                     icon="bi-cash-coin"
-                    color="danger"
+                    color="dark"
                 />
             </Col>
         </Row>

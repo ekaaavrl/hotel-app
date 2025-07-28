@@ -30,7 +30,7 @@ const SummaryChart = ({ data }) => {
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip formatter={(value) => `Rp${value.toLocaleString("id-ID")}`} />
-                    <Line type="monotone" dataKey="total" stroke="#007bff" strokeWidth={2} />
+                    <Line type="monotone" dataKey="total" stroke="#a3720f" strokeWidth={2} />
                 </LineChart>
             </ResponsiveContainer>
         </div>

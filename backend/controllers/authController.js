@@ -19,11 +19,9 @@ const login = async (req, res) => {
         { expiresIn: "1d" }
     );
 
-    // ✅ Ambil IP: fake jika development, asli jika production
     const isDev = process.env.NODE_ENV !== "production";
     const ip = isDev ? "192.168.88.45" : (req.headers['x-forwarded-for'] || req.connection.remoteAddress);
 
-    // ✅ Simpan log aktivitas login
     await UserLog.addLog(user.user_id, "login", "Login berhasil", ip);
 
     res.json({
@@ -36,4 +34,19 @@ const login = async (req, res) => {
     });
 };
 
-module.exports = { login };
+// ✅ Tambahkan fungsi logout
+const logout = async (req, res) => {
+    const userId = req.user?.user_id;
+
+    // Samakan cara ambil IP seperti di login
+    const isDev = process.env.NODE_ENV !== "production";
+    const ip = isDev ? "192.168.88.45" : (req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+    if (userId) {
+        await UserLog.addLog(userId, "logout", "Logout dari sistem", ip);
+    }
+
+    res.json({ message: "Logout berhasil" });
+};
+
+module.exports = { login, logout };

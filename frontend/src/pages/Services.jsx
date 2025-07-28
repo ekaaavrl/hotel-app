@@ -41,18 +41,17 @@ const RoomServices = () => {
                     reservation_id: data.reservation_id,
                     service_description: data.service_description,
                     status: data.status,
-                    fee: data.fee ?? "", // ✅ tambahkan ini!
+                    fee: data.fee ?? "",
                 }
                 : {
                     reservation_id: "",
                     service_description: "",
                     status: "pending",
-                    fee: "", // ✅ default juga
+                    fee: "",
                 }
         );
         setShow(true);
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -88,7 +87,7 @@ const RoomServices = () => {
             <Card className="shadow-sm">
                 <Card.Header className="d-flex justify-content-between align-items-center">
                     <h5 className="fw-bold text-dark m-0">Layanan Kamar</h5>
-                    <Button size="sm" onClick={() => handleShow()}>+ Tambah</Button>
+                    <Button variant="dark" size="sm" onClick={() => handleShow()}>+ Tambah</Button>
                 </Card.Header>
                 <Card.Body>
                     <Row className="mb-3">
@@ -178,7 +177,7 @@ const RoomServices = () => {
 
                                 {displayed.length === 0 && (
                                     <tr>
-                                        <td colSpan="7" className="text-center text-muted">
+                                        <td colSpan="8" className="text-center text-muted">
                                             Tidak ada data ditemukan.
                                         </td>
                                     </tr>
@@ -259,6 +258,7 @@ const RoomServices = () => {
                             <Form.Label>Biaya Layanan</Form.Label>
                             <Form.Control
                                 type="number"
+                                min="0"
                                 value={form.fee ?? ""}
                                 onChange={(e) => {
                                     const value = e.target.value;

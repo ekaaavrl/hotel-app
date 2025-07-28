@@ -50,8 +50,12 @@ const updatePayment = async (id, { reservation_id, amount_paid, payment_method, 
 
 // Hapus pembayaran
 const deletePayment = async (id) => {
-    await db.query(`DELETE FROM payments WHERE payment_id = ?`, [id]);
+    const [result] = await db.query(`DELETE FROM payments WHERE payment_id = ?`, [id]);
+    if (result.affectedRows === 0) {
+        throw new Error("Pembayaran tidak ditemukan atau sudah dihapus.");
+    }
 };
+
 
 module.exports = {
     getAllPayments,

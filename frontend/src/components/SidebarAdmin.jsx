@@ -17,6 +17,9 @@ import {
     FaChevronDown,
     FaChevronUp,
     FaDatabase,
+    FaFileInvoiceDollar,
+    FaRegistered,
+    FaAddressBook,
 } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
@@ -40,11 +43,21 @@ function SidebarAdmin() {
         backgroundColor: "#495057",
     };
 
+    const groupTitleStyle = {
+        fontSize: "11px",
+        fontWeight: "bold",
+        color: "#adb5bd",
+        padding: "8px 16px 4px",
+        marginBottom: "0",
+        marginTop: "16px",
+        textTransform: "uppercase",
+    };
+
     return (
         <div
             style={{
                 width: "240px",
-                height: "calc(100vh - 56px)", // agar tidak lewat navbar
+                height: "calc(100vh - 56px)",
                 position: "fixed",
                 top: "56px",
                 left: 0,
@@ -52,17 +65,16 @@ function SidebarAdmin() {
                 backgroundColor: "#343a40",
                 color: "#ffffff",
                 overflowY: "auto",
-                overflowX: "hidden", // cegah scroll horizontal
+                overflowX: "hidden",
                 paddingTop: "20px",
                 fontSize: "14px",
-                scrollbarWidth: "thin", // Firefox
-                scrollbarColor: "#888 #343a40", // Firefox
+                scrollbarWidth: "thin",
+                scrollbarColor: "#888 #343a40",
             }}
         >
             <div className="px-3">
-                <h5 className="text-white mb-4">Menu</h5>
-
-                {/* Dashboard */}
+                {/* MAIN */}
+                <p style={groupTitleStyle}>UTAMA</p>
                 <NavLink
                     to="/dashboard"
                     style={({ isActive }) =>
@@ -72,152 +84,117 @@ function SidebarAdmin() {
                     <FaHome className="me-2" /> Dashboard
                 </NavLink>
 
+                {/* MANAGEMENT */}
+                <p style={groupTitleStyle}>MANAJEMEN</p>
+
                 {/* Master Data */}
-                <div className="mt-3">
-                    <div
-                        onClick={() => setOpenMaster(!openMaster)}
-                        style={{
-                            ...navLinkStyle,
-                            justifyContent: "space-between",
-                            cursor: "pointer",
-                        }}
-                    >
-                        <span>
-                            <FaDatabase className="me-2" /> Master Data
-                        </span>
-                        {openMaster ? <FaChevronUp /> : <FaChevronDown />}
+                <SidebarToggle
+                    title="Master Data"
+                    icon={<FaDatabase />}
+                    isOpen={openMaster}
+                    setIsOpen={setOpenMaster}
+                />
+                {openMaster && (
+                    <div className="ms-3 d-flex flex-column gap-2 mt-2">
+                        <SidebarLink to="/room-types" icon={<FaBed />} text="Jenis Kamar" />
+                        <SidebarLink to="/rooms" icon={<FaDoorClosed />} text="Data Kamar" />
+                        <SidebarLink to="/guests" icon={<FaUsers />} text="Data Tamu" />
+                        <SidebarLink to="/staff" icon={<FaUserTie />} text="Data Karyawan" />
+                        <SidebarLink to="/users" icon={<FaUserShield />} text="Data Pengguna" />
                     </div>
-                    {openMaster && (
-                        <div className="ms-3 mt-2 d-flex flex-column gap-2">
-                            <NavLink to="/room-types" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaBed className="me-2" /> Jenis Kamar
-                            </NavLink>
-                            <NavLink to="/rooms" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaDoorClosed className="me-2" /> Data Kamar
-                            </NavLink>
-                            <NavLink to="/guests" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaUsers className="me-2" /> Data Tamu
-                            </NavLink>
-                            <NavLink to="/staff" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaUserTie className="me-2" /> Data Karyawan
-                            </NavLink>
-                            <NavLink to="/users" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaUserShield className="me-2" /> Data Pengguna
-                            </NavLink>
-                        </div>
-                    )}
-                </div>
+                )}
 
                 {/* Transaksi */}
-                <div className="mt-3">
-                    <div
-                        onClick={() => setOpenTransaksi(!openTransaksi)}
-                        style={{
-                            ...navLinkStyle,
-                            justifyContent: "space-between",
-                            cursor: "pointer",
-                        }}
-                    >
-                        <span>
-                            <FaExchangeAlt className="me-2" /> Transaksi
-                        </span>
-                        {openTransaksi ? <FaChevronUp /> : <FaChevronDown />}
+                <SidebarToggle
+                    title="Transaksi"
+                    icon={<FaExchangeAlt />}
+                    isOpen={openTransaksi}
+                    setIsOpen={setOpenTransaksi}
+                />
+                {openTransaksi && (
+                    <div className="ms-3 d-flex flex-column gap-2 mt-2">
+                        <SidebarLink to="/guest-form" icon={<FaUsers />} text="Tamu" />
+                        <SidebarLink to="/reservation-form" icon={<FaClipboardList />} text="Reservasi" />
+                        <SidebarLink to="/services" icon={<FaConciergeBell />} text="Layanan Kamar" />
+                        <SidebarLink to="/payments" icon={<FaMoneyBill />} text="Pembayaran" />
                     </div>
-                    {openTransaksi && (
-                        <div className="ms-3 mt-2 d-flex flex-column gap-2">
-                            <NavLink to="/guest-form" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaUsers className="me-2" /> Tamu
-                            </NavLink>
-                            <NavLink to="/reservation-form" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaClipboardList className="me-2" /> Reservasi
-                            </NavLink>
-                            <NavLink to="/services" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaConciergeBell className="me-2" /> Layanan Kamar
-                            </NavLink>
-                            <NavLink to="/payments" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaMoneyBill className="me-2" /> Pembayaran
-                            </NavLink>
-                        </div>
-                    )}
-                </div>
+                )}
 
-                {/* Laporan */}
-                <div className="mt-3">
-                    <div
-                        onClick={() => setOpenLaporan(!openLaporan)}
-                        style={{
-                            ...navLinkStyle,
-                            justifyContent: "space-between",
-                            cursor: "pointer",
-                        }}
-                    >
-                        <span>
-                            <FaChartBar className="me-2" /> Laporan
-                        </span>
-                        {openLaporan ? <FaChevronUp /> : <FaChevronDown />}
+                {/* LAPORAN */}
+                <p style={groupTitleStyle}>LAPORAN</p>
+                <SidebarToggle
+                    title="Laporan"
+                    icon={<FaChartBar />}
+                    isOpen={openLaporan}
+                    setIsOpen={setOpenLaporan}
+                />
+                {openLaporan && (
+                    <div className="ms-3 d-flex flex-column gap-2 mt-2">
+                        <SidebarLink to="/reports/rooms" icon={<FaDoorClosed />} text="Laporan Kamar" />
+                        <SidebarLink to="/reports/history" icon={<FaFileInvoice />} text="Laporan Pembayaran" />
+                        <SidebarLink to="/reports/income" icon={<FaFileInvoiceDollar />} text="Laporan Pendapatan" />
+                        <SidebarLink to="/reports/history-reservations" icon={<FaAddressBook />} text="Laporan Reservasi" />
+                        <SidebarLink to="/reports/reservations" icon={<FaClipboardList />} text="Laporan Reservasi Harian" />
                     </div>
-                    {openLaporan && (
-                        <div className="ms-3 mt-2 d-flex flex-column gap-2">
-                            <NavLink to="/reports/history" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaHistory className="me-2" /> Riwayat Pembayaran
-                            </NavLink>
-                            <NavLink to="/reports/history-reservations" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaHistory className="me-2" /> Riwayat Reservasi
-                            </NavLink>
-                            <NavLink to="/reports/reservations" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaClipboardList className="me-2" /> Laporan Reservasi Harian
-                            </NavLink>
-                            <NavLink to="/reports/income" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaFileInvoice className="me-2" /> Laporan Pendapatan
-                            </NavLink>
-                            <NavLink to="/reports/rooms" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaDoorClosed className="me-2" /> Laporan Kamar
-                            </NavLink>
-                        </div>
-                    )}
-                </div>
+                )}
 
-                {/* Sistem */}
-                <div className="mt-3 mb-4">
-                    <div
-                        onClick={() => setOpenSistem(!openSistem)}
-                        style={{
-                            ...navLinkStyle,
-                            justifyContent: "space-between",
-                            cursor: "pointer",
-                        }}
-                    >
-                        <span>
-                            <FaCogs className="me-2" /> Sistem
-                        </span>
-                        {openSistem ? <FaChevronUp /> : <FaChevronDown />}
+                {/* SISTEM */}
+                <p style={groupTitleStyle}>SISTEM</p>
+                <SidebarToggle
+                    title="Sistem"
+                    icon={<FaCogs />}
+                    isOpen={openSistem}
+                    setIsOpen={setOpenSistem}
+                />
+                {openSistem && (
+                    <div className="ms-3 d-flex flex-column gap-2 mt-2">
+                        <SidebarLink to="/logs" icon={<FaHistory />} text="Aktivitas Pengguna" />
                     </div>
-                    {openSistem && (
-                        <div className="ms-3 mt-2 d-flex flex-column gap-2">
-                            <NavLink to="/logs" style={({ isActive }) =>
-                                isActive ? { ...navLinkStyle, ...navLinkActive } : navLinkStyle}>
-                                <FaHistory className="me-2" /> User Logs
-                            </NavLink>
-                        </div>
-                    )}
-                </div>
+                )}
             </div>
         </div>
     );
 }
+
+const SidebarToggle = ({ title, icon, isOpen, setIsOpen }) => (
+    <div
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "8px 16px",
+            borderRadius: "6px",
+            color: "#ffffff",
+            fontSize: "14px",
+            cursor: "pointer",
+            justifyContent: "space-between",
+        }}
+    >
+        <span className="d-flex align-items-center">
+            {icon}
+            <span className="ms-2">{title}</span>
+        </span>
+        {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+    </div>
+);
+
+const SidebarLink = ({ to, icon, text }) => (
+    <NavLink
+        to={to}
+        style={({ isActive }) => ({
+            display: "flex",
+            alignItems: "center",
+            color: "#ffffff",
+            padding: "8px 16px",
+            textDecoration: "none",
+            borderRadius: "6px",
+            fontSize: "14px",
+            backgroundColor: isActive ? "#495057" : "transparent",
+        })}
+    >
+        {icon}
+        <span className="ms-2">{text}</span>
+    </NavLink>
+);
 
 export default SidebarAdmin;

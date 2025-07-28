@@ -30,7 +30,7 @@ const ReservationChart = ({ data }) => {
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip formatter={(value) => `${value} reservasi`} />
-                    <Bar dataKey="total" fill="#00b894" />
+                    <Bar dataKey="total" fill="#a3720f" />
                 </BarChart>
             </ResponsiveContainer>
         </div>

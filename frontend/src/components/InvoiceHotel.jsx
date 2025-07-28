@@ -1,4 +1,5 @@
 import React from "react";
+import hotelImg from "../assets/logo.png";
 
 const InvoiceHotel = ({ invoice }) => {
     if (!invoice) return null;
@@ -13,19 +14,32 @@ const InvoiceHotel = ({ invoice }) => {
         total = 0,
     } = invoice;
 
-    const formatDate = (date) => date?.replace("T", " ").slice(0, 16);
+    const formatDate = (dateStr) => {
+        return new Date(dateStr).toLocaleString("id-ID", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+        }).replace(",", "");
+    };
+
 
     return (
         <div id="invoice-to-print" style={styles.wrapper}>
             {/* Header */}
             <div style={styles.header}>
                 <div>
-                    <h2 style={{ margin: 0 }}>🏨 HOTEL RANS</h2>
+                    <h2 style={{ margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+                        <img src={hotelImg} alt="Hotel" style={{ width: 35, height: 35 }} />
+                        LUXURY HOTEL
+                    </h2>
                     <p style={styles.address}>Jl. Raya Damai No.88, Bandung</p>
                     <p style={styles.address}>+62 812-3456-7890</p>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                    <h3 style={{ margin: 0 }}>INVOICE</h3>
+                    <h4 style={{ margin: 0 }}>INVOICE</h4>
                     <p style={{ margin: 0, fontSize: 13 }}>Tanggal: {formatDate(new Date().toISOString())}</p>
                 </div>
             </div>
@@ -82,7 +96,7 @@ const InvoiceHotel = ({ invoice }) => {
 
             {/* Footer */}
             <div style={styles.footer}>
-                <p>💖 Terima kasih telah menginap di HOTEL RANS</p>
+                <p>Terima kasih atas kunjungan Anda</p>
             </div>
         </div>
     );

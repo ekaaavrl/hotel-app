@@ -220,7 +220,7 @@ const GuestManagement = () => {
             <Card className="shadow-sm">
                 <Card.Header className="d-flex justify-content-between align-items-center">
                     <h5 className="m-0 fw-bold text-dark">Manajemen Tamu</h5>
-                    <Button variant="primary" size="sm" onClick={() => handleShow()}>
+                    <Button variant="dark" size="sm" onClick={() => handleShow()}>
                         + Tambah
                     </Button>
                 </Card.Header>

@@ -115,7 +115,9 @@ const ReservationForm = () => {
     const handleEdit = (data) => {
         const formatDate = (dateStr) => {
             const date = new Date(dateStr);
-            return date.toISOString().split("T")[0]; // hasil: "2025-07-22"
+            const offset = date.getTimezoneOffset();
+            const localDate = new Date(date.getTime() - offset * 60 * 1000);
+            return localDate.toISOString().slice(0, 16); // yyyy-MM-ddTHH:mm
         };
 
         setForm({

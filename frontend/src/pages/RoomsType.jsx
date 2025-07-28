@@ -51,7 +51,7 @@ const RoomTypes = () => {
             <Card className="shadow mb-4">
                 <Card.Header className="py-3 d-flex justify-content-between align-items-center">
                     <h5 className="m-0 fw-bold text-dark">Data Tipe Kamar</h5>
-                    <Button variant="primary" size="sm" onClick={() => handleShow()}>
+                    <Button variant="dark" size="sm" onClick={() => handleShow()}>
                         + Tambah
                     </Button>
                 </Card.Header>

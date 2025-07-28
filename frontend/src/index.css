@@ -3,9 +3,10 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Hapus pengaruh dark mode */
+  /* color-scheme: light dark; */
+  color: #213547;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -27,12 +28,22 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  /* ✅ Tambah ini */
   justify-content: center;
-  /* ✅ Tambah ini */
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #ffffff;
+  /* Tambah supaya body putih */
+  color: #000000;
+  /* Tambah supaya teks hitam */
+}
+
+/* Paksa card putih */
+.card,
+.card-header,
+.card-body {
+  background-color: #ffffff !important;
+  color: #000 !important;
 }
 
 h1 {
@@ -61,22 +72,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-/* Custom Scrollbar - Chrome, Edge, Safari */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -96,15 +92,6 @@ button:focus-visible {
 
 .modal-backdrop-custom {
   z-index: 1999 !important;
-  /* supaya backdrop di bawah modal */
-}
-
-/* Tabs Custom Style */
-.custom-tabs .nav-tabs {
-  border-bottom: 1px solid #dee2e6;
-  background-color: #f8f9fa;
-  border-radius: 0.5rem 0.5rem 0 0;
-  padding: 0 1rem;
 }
 
 .custom-tabs .nav-tabs {
@@ -137,7 +124,6 @@ button:focus-visible {
   border-bottom: 2px solid transparent;
 }
 
-/* Tambahan penting untuk mencegah scroll horizontal */
 html,
 body {
   overflow-x: hidden !important;
@@ -184,4 +170,32 @@ body {
   .btn-close {
     display: none !important;
   }
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 6px;
+  color: #495057;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.sidebar-link:hover {
+  background-color: #f2f2f2;
+  color: #eaa416;
+}
+
+.sidebar-link svg {
+  margin-right: 8px;
+  color: inherit;
+}
+
+.sidebar-link.active {
+  background-color: #eaa416;
+  color: white !important;
+  font-weight: 600;
 }
