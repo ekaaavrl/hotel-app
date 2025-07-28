@@ -134,7 +134,7 @@ function SidebarAdmin() {
                         <SidebarLink to="/reports/history" icon={<FaFileInvoice />} text="Laporan Pembayaran" />
                         <SidebarLink to="/reports/income" icon={<FaFileInvoiceDollar />} text="Laporan Pendapatan" />
                         <SidebarLink to="/reports/history-reservations" icon={<FaAddressBook />} text="Laporan Reservasi" />
-                        <SidebarLink to="/reports/reservations" icon={<FaClipboardList />} text="Laporan Reservasi Harian" />
+                        {/*<SidebarLink to="/reports/reservations" icon={<FaClipboardList />} text="Laporan Reservasi Harian" />*/}
                     </div>
                 )}
 

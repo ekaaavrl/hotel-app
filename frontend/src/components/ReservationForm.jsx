@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import { Form, Button, Row, Col, Alert, Tabs, Tab, Table, Card } from "react-bootstrap";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
+import { InputGroup } from "react-bootstrap";
 
 const maxGuestsByRoomType = {
     single: 2,
@@ -28,6 +29,26 @@ const ReservationForm = () => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [error, setError] = useState("");
     const [activeTab, setActiveTab] = useState("form");
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filteredReservations = reservations.filter((r) => {
+        const guestName = guests.find((g) => g.guest_id === r.guest_id)?.full_name || "";
+        const roomNumber = rooms.find((ro) => ro.room_id === r.room_id)?.room_number || "";
+        const values = [
+            `RSV-${r.reservation_id}`,
+            guestName,
+            roomNumber,
+            r.check_in_date,
+            r.check_out_date,
+            r.number_of_guests?.toString(),
+            r.status
+        ];
+
+        return values.some((val) =>
+            val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    });
+
 
     const fetchData = async () => {
         try {
@@ -168,6 +189,7 @@ const ReservationForm = () => {
                 </Card.Header>
 
                 <Card.Body>
+
                     <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3 custom-tabs">
                         <Tab eventKey="form" title={editId ? "Edit Reservasi" : "Form Reservasi"}>
                             {error && <Alert variant="danger">{error}</Alert>}
@@ -309,6 +331,19 @@ const ReservationForm = () => {
                         </Tab>
 
                         <Tab eventKey="list" title={`Daftar Reservasi`}>
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text>
+                                    <FaSearch />
+                                </InputGroup.Text>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Cari reservasi..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </InputGroup>
+
+
                             <Table striped bordered hover responsive style={{ fontSize: '12px' }}>
                                 <thead>
                                     <tr>
@@ -324,7 +359,7 @@ const ReservationForm = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {reservations.map((r, i) => (
+                                    {filteredReservations.map((r, i) => (
                                         <tr key={r.reservation_id}>
                                             <td>{i + 1}</td>
                                             <td>RSV-{r.reservation_id}</td> {/* ✅ Ini yang ditambahkan */}

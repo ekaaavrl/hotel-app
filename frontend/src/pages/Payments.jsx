@@ -1,4 +1,3 @@
-// Bagian atas tetap (import, useState, useEffect, dll)
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import {
@@ -6,11 +5,11 @@ import {
     Form,
     Button,
     Modal,
-    Card
+    Card,
+    InputGroup
 } from "react-bootstrap";
-import { FaEdit, FaTrash, FaPrint } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPrint, FaSearch } from "react-icons/fa";
 import InvoiceHotel from "../components/InvoiceHotel";
-
 
 const Payments = () => {
     const [payments, setPayments] = useState([]);
@@ -20,7 +19,7 @@ const Payments = () => {
         amount_paid: "",
         payment_method: "cash",
         notes: "",
-        additional_fee: 0, // ✅ Tambah ini
+        additional_fee: 0,
     });
     const [show, setShow] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState(null);
@@ -28,9 +27,14 @@ const Payments = () => {
     const [serviceDescriptions, setServiceDescriptions] = useState("");
     const [editId, setEditId] = useState(null);
 
+    const [searchTerm, setSearchTerm] = useState("");
+    const [paymentFilter, setPaymentFilter] = useState("all");
+    const [filteredPayments, setFilteredPayments] = useState([]);
+
     const fetchPayments = async () => {
         const res = await api.get("/payments");
         setPayments(res.data);
+        setFilteredPayments(res.data);
     };
 
     const fetchReservations = async () => {
@@ -44,7 +48,7 @@ const Payments = () => {
             const completed = res.data.filter(item => item.status === 'completed');
             const totalFee = completed.reduce((sum, item) => sum + (item.fee || 0), 0);
             setAdditionalFee(totalFee);
-            setForm(prev => ({ ...prev, additional_fee: totalFee })); // ✅ simpan ke form juga
+            setForm(prev => ({ ...prev, additional_fee: totalFee }));
         } catch (err) {
             console.error("Gagal mengambil layanan kamar:", err);
             setAdditionalFee(0);
@@ -71,9 +75,32 @@ const Payments = () => {
         fetchReservations();
     }, []);
 
+    useEffect(() => {
+        const filtered = payments.filter((item) => {
+            const valuesToSearch = [
+                item.payment_id,
+                item.reservation_id,
+                item.amount_paid,
+                item.additional_fee,
+                item.payment_method,
+                item.notes,
+                new Date(item.payment_date).toLocaleDateString("id-ID"),
+            ]
+                .map(v => String(v || "").toLowerCase())
+                .join(" ");
+
+            return valuesToSearch.includes(searchTerm.toLowerCase());
+        });
+
+        const finalFiltered = paymentFilter === "all"
+            ? filtered
+            : filtered.filter(item => item.payment_method === paymentFilter);
+
+        setFilteredPayments(finalFiltered);
+    }, [searchTerm, payments, paymentFilter]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const payload = {
             reservation_id: parseInt(form.reservation_id),
             amount_paid: parseInt(form.amount_paid) || 0,
@@ -105,7 +132,7 @@ const Payments = () => {
             amount_paid: payment.amount_paid,
             payment_method: payment.payment_method,
             notes: payment.notes,
-            additional_fee: payment.additional_fee || 0, // ✅ penting
+            additional_fee: payment.additional_fee || 0,
         });
         setSelectedReservation({
             ...reservation,
@@ -174,8 +201,6 @@ const Payments = () => {
         win.close();
     };
 
-
-
     return (
         <div className="container-fluid py-4">
             <Card className="shadow mb-4">
@@ -184,6 +209,33 @@ const Payments = () => {
                     <Button variant="dark" size="sm" onClick={() => setShow(true)}>+ Tambah</Button>
                 </Card.Header>
                 <Card.Body>
+                    <div className="d-flex gap-2 mb-3 flex-wrap">
+                        <InputGroup style={{ maxWidth: "250px", fontSize: "12px" }}>
+                            <InputGroup.Text>
+                                <FaSearch />
+                            </InputGroup.Text>
+                            <Form.Control
+                                type="text"
+                                placeholder="Cari pembayaran..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="form-control-sm"
+                                style={{ fontSize: "13px" }}
+                            />
+                        </InputGroup>
+                        <Form.Select
+                            style={{ maxWidth: "180px", fontSize: "13px" }}
+                            value={paymentFilter}
+                            onChange={(e) => setPaymentFilter(e.target.value)}
+                        >
+                            <option value="all">Semua Metode</option>
+                            <option value="cash">Cash</option>
+                            <option value="credit_card">Kartu Kredit</option>
+                            <option value="debit_card">Kartu Debit</option>
+                            <option value="bank_transfer">Transfer</option>
+                        </Form.Select>
+                    </div>
+
                     <div className="table-responsive">
                         <Table bordered hover responsive style={{ fontSize: "13px" }}>
                             <thead className="thead-light">
@@ -200,7 +252,7 @@ const Payments = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {payments.map((item, i) => {
+                                {filteredPayments.map((item, i) => {
                                     const relatedReservation = reservations.find(r => r.reservation_id === item.reservation_id);
                                     const totalPrice = relatedReservation ? parseInt(relatedReservation.total_price || 0) : 0;
                                     const sisaTagihan = totalPrice + parseInt(item.additional_fee || 0) - parseInt(item.amount_paid || 0);
@@ -257,9 +309,7 @@ const Payments = () => {
                                                 >
                                                     <FaPrint />
                                                 </Button>
-
                                             </td>
-
                                         </tr>
                                     );
                                 })}

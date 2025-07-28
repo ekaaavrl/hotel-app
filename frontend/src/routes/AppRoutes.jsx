@@ -29,7 +29,7 @@ const AppRoutes = () => (
         <Route
             path="/dashboard"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <Dashboard />
                     </Layout>
@@ -39,7 +39,7 @@ const AppRoutes = () => (
         <Route
             path="/invoice/:reservationId"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <InvoicePage />
                     </Layout>
@@ -49,7 +49,7 @@ const AppRoutes = () => (
         <Route
             path="/profile"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <Profile />
                     </Layout>
@@ -59,7 +59,7 @@ const AppRoutes = () => (
         <Route
             path="/guests"
             element={
-                <PrivateRoute allowedRoles={["admin"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <Guests />
                     </Layout>
@@ -69,7 +69,7 @@ const AppRoutes = () => (
         <Route
             path="/guest-form"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <GuestForm />
                     </Layout>
@@ -79,7 +79,7 @@ const AppRoutes = () => (
         <Route
             path="/room-types"
             element={
-                <PrivateRoute allowedRoles={["admin"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <RoomTypes />
                     </Layout>
@@ -89,7 +89,7 @@ const AppRoutes = () => (
         <Route
             path="/rooms"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <Rooms />
                     </Layout>
@@ -99,18 +99,17 @@ const AppRoutes = () => (
         <Route
             path="/reservation-form"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <ReservationForm />
                     </Layout>
                 </PrivateRoute>
             }
         />
-
         <Route
             path="/payments"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <Payments />
                     </Layout>
@@ -120,7 +119,7 @@ const AppRoutes = () => (
         <Route
             path="/staff"
             element={
-                <PrivateRoute allowedRoles={["admin"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <Staff />
                     </Layout>
@@ -130,7 +129,7 @@ const AppRoutes = () => (
         <Route
             path="/users"
             element={
-                <PrivateRoute allowedRoles={["admin"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <Users />
                     </Layout>
@@ -140,7 +139,7 @@ const AppRoutes = () => (
         <Route
             path="/services"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <RoomServices />
                     </Layout>
@@ -150,7 +149,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/history"
             element={
-                <PrivateRoute allowedRoles={["admin"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <ReportHistory />
                     </Layout>
@@ -160,7 +159,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/history-reservations"
             element={
-                <PrivateRoute allowedRoles={["admin"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <ReservationHistory />
                     </Layout>
@@ -170,7 +169,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/reservations"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <ReportReservations />
                     </Layout>
@@ -180,7 +179,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/income"
             element={
-                <PrivateRoute allowedRoles={["admin"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <ReportIncome />
                     </Layout>
@@ -190,7 +189,7 @@ const AppRoutes = () => (
         <Route
             path="/reports/rooms"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis"]}>
+                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
                     <Layout>
                         <ReportRooms />
                     </Layout>
@@ -200,7 +199,7 @@ const AppRoutes = () => (
         <Route
             path="/logs"
             element={
-                <PrivateRoute allowedRoles={["admin"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <UserLogs />
                     </Layout>

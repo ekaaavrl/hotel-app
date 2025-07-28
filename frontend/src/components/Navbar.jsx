@@ -43,7 +43,7 @@ function TopNavbar() {
                         style={{ height: "30px", objectFit: "contain" }}
                     />
                     <span style={{ fontSize: "1.25rem", color: "#212529" }}>
-                        Hotel Management
+                        Hotel Manajemen
                     </span>
                 </Navbar.Brand>
 
@@ -60,7 +60,7 @@ function TopNavbar() {
                     >
                         <FaUserCircle size={22} />
                         <span className="d-none d-md-inline">
-                            {user?.role || "User"}
+                            {user?.full_name || "User"}
                         </span>
                     </Dropdown.Toggle>
 

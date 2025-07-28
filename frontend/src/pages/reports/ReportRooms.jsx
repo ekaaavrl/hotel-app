@@ -105,7 +105,24 @@ const ReportRooms = () => {
                             />
                         </Col>
                     </Row>
-
+                    {/* Summary */}
+                    <Row className="mb-3">
+                        <Col>
+                            <Badge bg="success" className="p-2 w-100 text-start">
+                                Tersedia: {summary.available}
+                            </Badge>
+                        </Col>
+                        <Col>
+                            <Badge bg="danger" className="p-2 w-100 text-start">
+                                Ditempati: {summary.occupied}
+                            </Badge>
+                        </Col>
+                        <Col>
+                            <Badge bg="warning" text="dark" className="p-2 w-100 text-start">
+                                Maintenance: {summary.maintenance}
+                            </Badge>
+                        </Col>
+                    </Row>
                     {/* Tabs per Tipe */}
                     <ul className="nav nav-tabs mb-3 custom-tabs">
                         <li className="nav-item">
@@ -133,25 +150,6 @@ const ReportRooms = () => {
                             </li>
                         ))}
                     </ul>
-
-                    {/* Summary */}
-                    <Row className="mb-3">
-                        <Col>
-                            <Badge bg="success" className="p-2 w-100 text-start">
-                                Tersedia: {summary.available}
-                            </Badge>
-                        </Col>
-                        <Col>
-                            <Badge bg="danger" className="p-2 w-100 text-start">
-                                Ditempati: {summary.occupied}
-                            </Badge>
-                        </Col>
-                        <Col>
-                            <Badge bg="warning" text="dark" className="p-2 w-100 text-start">
-                                Maintenance: {summary.maintenance}
-                            </Badge>
-                        </Col>
-                    </Row>
 
                     {/* Tabel */}
                     <div className="table-responsive">

@@ -15,22 +15,21 @@ const ReservationChart = ({ data }) => {
         date: new Date(item.date).toLocaleDateString("id-ID", {
             day: "2-digit",
             month: "short",
-            year: "numeric",
         }),
     }));
 
     return (
         <div className="bg-white shadow rounded p-4 h-100">
-            <h2 style={{ fontSize: "18px" }} className="font-semibold mb-3">
+            <h2 style={{ fontSize: "16px" }} className="fw-semibold mb-3">
                 Grafik Reservasi
             </h2>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={formattedData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip formatter={(value) => `${value} reservasi`} />
-                    <Bar dataKey="total" fill="#a3720f" />
+                    <Bar dataKey="total" fill="#a3720f" barSize={30} />
                 </BarChart>
             </ResponsiveContainer>
         </div>

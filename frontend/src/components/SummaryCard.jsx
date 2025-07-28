@@ -12,13 +12,19 @@ export default function SummaryCard({ title, value, icon }) {
     const customColor = "#a3720f";
 
     return (
-        <Card className="shadow h-100 py-2 border-0">
+        <Card
+            className="shadow h-100 py-2"
+            style={{
+                border: "1px solid #000", // ✅ border hitam
+                borderRadius: "0.5rem",
+            }}
+        >
             <Card.Body>
                 <div className="d-flex align-items-center justify-content-between">
                     <div className="me-2">
                         <div
                             className="text-uppercase fw-bold small mb-1"
-                            style={{ color: "dark" }} // warna title tetap abu seperti default
+                            style={{ color: "dark" }} // abu-abu gelap
                         >
                             {title}
                         </div>
