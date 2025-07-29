@@ -89,7 +89,7 @@ const AppRoutes = () => (
         <Route
             path="/rooms"
             element={
-                <PrivateRoute allowedRoles={["admin", "resepsionis", "manager"]}>
+                <PrivateRoute allowedRoles={["admin", "manager"]}>
                     <Layout>
                         <Rooms />
                     </Layout>

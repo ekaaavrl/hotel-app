@@ -29,9 +29,6 @@ function SidebarResepsionis() {
                 <SidebarLink to="/dashboard" icon={<FaHome />} text="Dashboard" />
 
                 <SidebarGroup title="MANAJEMEN" />
-                <SidebarLink to="/rooms" icon={<FaDoorClosed />} text="Data Kamar" />
-
-                <SidebarGroup title="TRANSAKSI" />
                 <SidebarToggle
                     title="Transaksi"
                     icon={<FaExchangeAlt />}

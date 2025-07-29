@@ -180,10 +180,22 @@ const ReservationForm = () => {
     };
 
     const maxGuests = getMaxGuests();
+
+    const formatDatetimeLocal = (date) => {
+        const pad = (n) => n.toString().padStart(2, "0");
+        const yyyy = date.getFullYear();
+        const MM = pad(date.getMonth() + 1);
+        const dd = pad(date.getDate());
+        const hh = pad(date.getHours());
+        const mm = pad(date.getMinutes());
+        return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
+    };
+
     useEffect(() => {
         if (!form.reservation_date || !days || !form.room_id) return;
 
-        const checkIn = new Date(`${form.reservation_date}T12:00:00`);
+        const [year, month, day] = form.reservation_date.split("-").map(Number);
+        const checkIn = new Date(year, month - 1, day, 12, 0, 0); // bulan -1 karena index 0 = Januari
         const checkOut = new Date(checkIn);
         checkOut.setDate(checkIn.getDate() + Number(days));
 
@@ -192,8 +204,8 @@ const ReservationForm = () => {
 
         setForm(prev => ({
             ...prev,
-            check_in_date: checkIn.toISOString().slice(0, 16),
-            check_out_date: checkOut.toISOString().slice(0, 16),
+            check_in_date: formatDatetimeLocal(checkIn),
+            check_out_date: formatDatetimeLocal(checkOut),
         }));
 
         setTotalPrice(days * price);
