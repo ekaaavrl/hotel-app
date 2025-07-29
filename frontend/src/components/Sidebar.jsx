@@ -5,7 +5,7 @@ function Sidebar() {
     const role = JSON.parse(localStorage.getItem("user"))?.role;
     console.log("ROLE TERDETEKSI:", role);
 
-    if (role === "admin", "manager") return <SidebarAdmin />;
+    if (role === "admin" || role === "manager") return <SidebarAdmin />;
     if (role === "resepsionis") return <SidebarResepsionis />;
     return null;
 }

@@ -1,12 +1,11 @@
 import { useState } from "react";
 import {
-    FaHome, FaBed, FaUsers, FaExchangeAlt, FaConciergeBell, FaClipboardList,
-    FaChartBar, FaDoorClosed, FaChevronDown, FaChevronUp, FaMoneyBill, FaDatabase,
+    FaHome, FaUsers, FaExchangeAlt, FaConciergeBell, FaClipboardList,
+    FaChartBar, FaDoorClosed, FaChevronDown, FaChevronUp, FaMoneyBill,
 } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
 function SidebarResepsionis() {
-    const [openMaster, setOpenMaster] = useState(false);
     const [openTransaksi, setOpenTransaksi] = useState(false);
     const [openLaporan, setOpenLaporan] = useState(false);
 
@@ -30,19 +29,9 @@ function SidebarResepsionis() {
                 <SidebarLink to="/dashboard" icon={<FaHome />} text="Dashboard" />
 
                 <SidebarGroup title="MANAJEMEN" />
-                <SidebarToggle
-                    title="Master Data"
-                    icon={<FaDatabase />}
-                    isOpen={openMaster}
-                    setIsOpen={setOpenMaster}
-                />
-                {openMaster && (
-                    <div className="ms-3 d-flex flex-column gap-2 mt-2">
-                        <SidebarLink to="/rooms" icon={<FaDoorClosed />} text="Data Kamar" />
-                        <SidebarLink to="/guests" icon={<FaUsers />} text="Data Tamu" />
-                    </div>
-                )}
+                <SidebarLink to="/rooms" icon={<FaDoorClosed />} text="Data Kamar" />
 
+                <SidebarGroup title="TRANSAKSI" />
                 <SidebarToggle
                     title="Transaksi"
                     icon={<FaExchangeAlt />}
@@ -51,7 +40,7 @@ function SidebarResepsionis() {
                 />
                 {openTransaksi && (
                     <div className="ms-3 d-flex flex-column gap-2 mt-2">
-                        <SidebarLink to="/guest-form" icon={<FaUsers />} text="Tamu" />
+                        <SidebarLink to="/guest-form" icon={<FaUsers />} text="Tamu Baru" />
                         <SidebarLink to="/reservation-form" icon={<FaClipboardList />} text="Reservasi" />
                         <SidebarLink to="/services" icon={<FaConciergeBell />} text="Layanan Kamar" />
                         <SidebarLink to="/payments" icon={<FaMoneyBill />} text="Pembayaran" />

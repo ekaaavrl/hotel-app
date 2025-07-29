@@ -180,6 +180,25 @@ const ReservationForm = () => {
     };
 
     const maxGuests = getMaxGuests();
+    useEffect(() => {
+        if (!form.reservation_date || !days || !form.room_id) return;
+
+        const checkIn = new Date(`${form.reservation_date}T12:00:00`);
+        const checkOut = new Date(checkIn);
+        checkOut.setDate(checkIn.getDate() + Number(days));
+
+        const selectedRoom = rooms.find(r => r.room_id == form.room_id);
+        const price = selectedRoom ? selectedRoom.price_per_night : 0;
+
+        setForm(prev => ({
+            ...prev,
+            check_in_date: checkIn.toISOString().slice(0, 16),
+            check_out_date: checkOut.toISOString().slice(0, 16),
+        }));
+
+        setTotalPrice(days * price);
+    }, [form.reservation_date, days, form.room_id]);
+
 
     return (
         <div className="p-4">
@@ -214,29 +233,83 @@ const ReservationForm = () => {
                                     </Col>
                                     <Col md={6}>
                                         <Form.Group>
-                                            <Form.Label>Kamar</Form.Label>
+                                            <Form.Label>Jenis Kamar</Form.Label>
                                             <Form.Select
-                                                value={form.room_id}
+                                                value={form.type_name || ""}
                                                 onChange={(e) => {
-                                                    const roomId = e.target.value;
-                                                    const selected = rooms.find(r => r.room_id == roomId);
-                                                    const max = selected ? maxGuestsByRoomType[selected.type_name.toLowerCase()] : 1;
-                                                    setForm({
-                                                        ...form,
-                                                        room_id: roomId,
-                                                        number_of_guests: max, // reset sesuai kamar
-                                                    });
+                                                    const type = e.target.value;
+
+                                                    const typeRanges = {
+                                                        single: [101, 200],
+                                                        double: [201, 300],
+                                                        deluxe: [301, 400],
+                                                        suite: [401, 500],
+                                                    };
+
+                                                    const [min, max] = typeRanges[type.toLowerCase()] || [0, Infinity];
+
+                                                    // Ambil semua room_id yang sudah dibooked atau checked_in
+                                                    const occupiedRoomIds = reservations
+                                                        .filter(r => r.status === "booked" || r.status === "checked_in")
+                                                        .map(r => r.room_id);
+
+                                                    // Filter rooms berdasarkan type, rentang nomor, dan status kamar masih available
+                                                    const availableRooms = rooms
+                                                        .filter(r =>
+                                                            r.type_name === type &&
+                                                            Number(r.room_number) >= min &&
+                                                            Number(r.room_number) <= max &&
+                                                            !occupiedRoomIds.includes(r.room_id)
+                                                        )
+                                                        .sort((a, b) => Number(a.room_number) - Number(b.room_number));
+
+                                                    const selectedRoom = availableRooms[0]; // ambil nomor terkecil yang tersedia
+
+                                                    const maxGuests = maxGuestsByRoomType[type.toLowerCase()] || 1;
+
+                                                    setForm(prev => ({
+                                                        ...prev,
+                                                        type_name: type,
+                                                        room_id: selectedRoom?.room_id || "",
+                                                        number_of_guests: maxGuests
+                                                    }));
                                                 }}
+
                                                 required
                                             >
-                                                <option value="">-- Pilih Kamar --</option>
-                                                {rooms.map((r) => (
-                                                    <option key={r.room_id} value={r.room_id}>
-                                                        {r.room_number} - {r.type_name}
-                                                    </option>
+                                                <option value="">-- Pilih Jenis Kamar --</option>
+                                                {[...new Set(rooms.map(r => r.type_name))].map((type, index) => (
+                                                    <option key={index} value={type}>{type}</option>
                                                 ))}
                                             </Form.Select>
+                                            {form.room_id && (
+                                                <Form.Text className="text-muted">
+                                                    Nomor kamar otomatis: {rooms.find(r => r.room_id === form.room_id)?.room_number}
+                                                </Form.Text>
+                                            )}
                                         </Form.Group>
+                                    </Col>
+                                </Row>
+
+                                <Row className="mb-3">
+                                    <Col md={6}>
+                                        <Form.Label>Tanggal Reservasi</Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            value={form.reservation_date || ""}
+                                            onChange={(e) => setForm({ ...form, reservation_date: e.target.value })}
+                                            required
+                                        />
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Label>Total Hari</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            min="1"
+                                            value={days}
+                                            onChange={(e) => setDays(Number(e.target.value))}
+                                            required
+                                        />
                                     </Col>
                                 </Row>
 
@@ -246,8 +319,7 @@ const ReservationForm = () => {
                                         <Form.Control
                                             type="datetime-local"
                                             value={form.check_in_date}
-                                            onChange={(e) => setForm({ ...form, check_in_date: e.target.value })}
-                                            required
+                                            readOnly
                                         />
                                     </Col>
                                     <Col md={6}>
@@ -255,8 +327,7 @@ const ReservationForm = () => {
                                         <Form.Control
                                             type="datetime-local"
                                             value={form.check_out_date}
-                                            onChange={(e) => setForm({ ...form, check_out_date: e.target.value })}
-                                            required
+                                            readOnly
                                         />
                                     </Col>
                                 </Row>
@@ -271,25 +342,12 @@ const ReservationForm = () => {
                                             value={form.number_of_guests}
                                             onChange={(e) => {
                                                 let input = e.target.value;
-
-                                                // Hanya izinkan angka, kosong boleh
                                                 if (input === "" || /^[0-9]+$/.test(input)) {
                                                     let value = parseInt(input) || "";
+                                                    if (value > maxGuests) value = maxGuests;
+                                                    if (value !== "" && value < 1) value = 1;
 
-                                                    // Batasi maksimal sesuai tipe kamar
-                                                    if (value > maxGuests) {
-                                                        value = maxGuests;
-                                                    }
-
-                                                    // Batasi minimal 1 (kalau kamu mau default 1)
-                                                    if (value !== "" && value < 1) {
-                                                        value = 1;
-                                                    }
-
-                                                    setForm({
-                                                        ...form,
-                                                        number_of_guests: value,
-                                                    });
+                                                    setForm({ ...form, number_of_guests: value });
                                                 }
                                             }}
                                         />
@@ -312,7 +370,6 @@ const ReservationForm = () => {
                                 </Row>
 
                                 <p>
-                                    <strong>Total Hari:</strong> {days} |{" "}
                                     <strong>Total Harga:</strong> Rp{totalPrice.toLocaleString("id-ID")}
                                 </p>
 
@@ -326,8 +383,8 @@ const ReservationForm = () => {
                                         </Button>
                                     )}
                                 </div>
-
                             </Form>
+
                         </Tab>
 
                         <Tab eventKey="list" title={`Daftar Reservasi`}>
