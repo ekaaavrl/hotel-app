@@ -44,19 +44,6 @@ function SidebarResepsionis() {
                     </div>
                 )}
 
-                <SidebarGroup title="LAPORAN" />
-                <SidebarToggle
-                    title="Laporan"
-                    icon={<FaChartBar />}
-                    isOpen={openLaporan}
-                    setIsOpen={setOpenLaporan}
-                />
-                {openLaporan && (
-                    <div className="ms-3 d-flex flex-column gap-2 mt-2">
-                        <SidebarLink to="/reports/reservations" icon={<FaClipboardList />} text="Laporan Reservasi" />
-                        <SidebarLink to="/reports/rooms" icon={<FaDoorClosed />} text="Laporan Kamar" />
-                    </div>
-                )}
             </div>
         </div>
     );

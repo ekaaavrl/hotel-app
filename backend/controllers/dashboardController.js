@@ -32,7 +32,7 @@ const getDashboardStats = async (req, res) => {
 
     const [incomeToday] = await db.query(`
       SELECT SUM(amount_paid) AS total FROM payments
-      WHERE DATE(payment_date) = CURDATE()
+      WHERE DATE(payment_date) = CURDATE() 
     `);
 
     res.json({

@@ -84,39 +84,25 @@ function SidebarAdmin() {
                     <FaHome className="me-2" /> Dashboard
                 </NavLink>
 
-                {/* MANAGEMENT */}
-                <p style={groupTitleStyle}>MANAJEMEN</p>
 
-                {/* Master Data */}
+                {/* LAPORAN */}
+                <p style={groupTitleStyle}>LAPORAN</p>
                 <SidebarToggle
-                    title="Master Data"
-                    icon={<FaDatabase />}
-                    isOpen={openMaster}
-                    setIsOpen={setOpenMaster}
+                    title="Laporan"
+                    icon={<FaChartBar />}
+                    isOpen={openLaporan}
+                    setIsOpen={setOpenLaporan}
                 />
-                {openMaster && (
+                {openLaporan && (
                     <div className="ms-3 d-flex flex-column gap-2 mt-2">
-                        <SidebarLink to="/room-types" icon={<FaBed />} text="Jenis Kamar" />
-                        <SidebarLink to="/rooms" icon={<FaDoorClosed />} text="Data Kamar" />
-                        <SidebarLink to="/guests" icon={<FaUsers />} text="Data Tamu" />
-                        <SidebarLink to="/staff" icon={<FaUserTie />} text="Data Karyawan" />
-                        <SidebarLink to="/users" icon={<FaUserShield />} text="Data Pengguna" />
+                        <SidebarLink to="/reports/rooms" icon={<FaDoorClosed />} text="Laporan Kamar" />
+                        <SidebarLink to="/reports/history" icon={<FaFileInvoice />} text="Laporan Pembayaran" />
+                        <SidebarLink to="/reports/income" icon={<FaFileInvoiceDollar />} text="Laporan Pendapatan" />
+                        <SidebarLink to="/reports/history-reservations" icon={<FaAddressBook />} text="Laporan Reservasi" />
+                        {/*<SidebarLink to="/reports/reservations" icon={<FaClipboardList />} text="Laporan Reservasi Harian" />*/}
                     </div>
                 )}
 
-                {/* SISTEM */}
-                <p style={groupTitleStyle}>SISTEM</p>
-                <SidebarToggle
-                    title="Sistem"
-                    icon={<FaCogs />}
-                    isOpen={openSistem}
-                    setIsOpen={setOpenSistem}
-                />
-                {openSistem && (
-                    <div className="ms-3 d-flex flex-column gap-2 mt-2">
-                        <SidebarLink to="/logs" icon={<FaHistory />} text="Aktivitas Pengguna" />
-                    </div>
-                )}
             </div>
         </div>
     );

@@ -446,7 +446,7 @@ const Payments = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handlePrintInvoice}>
-                        🖨️ Cetak
+                        Cetak
                     </Button>
                     <Button variant="outline-danger" onClick={() => setShowInvoiceModal(false)}>
                         Tutup
